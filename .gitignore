@@ -1,0 +1,11 @@
+slicing_output/
+__pycache__/
+*.pyc
+*.log
+*.zip
+.DS_Store
+.env
+.env.*
+_asm_part_tmp.stl
+temp/
+tmp/

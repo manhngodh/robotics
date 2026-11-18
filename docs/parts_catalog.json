@@ -1,0 +1,119 @@
+[
+  {
+    "id": "join_link",
+    "name": "1. Join Link (MG996R-to-MG996R)",
+    "file": "meshes/parts/join_link.stl",
+    "color": "#298fd6",
+    "dims": [
+      116.5,
+      60.7,
+      35.6
+    ],
+    "volume_mm3": 67675.0,
+    "note": "PETG · Hốc servo sâu 30.0mm · Trục PIVOT_Z=24.10mm · Khe boot +X"
+  },
+  {
+    "id": "joint_base",
+    "name": "2. Joint Base V6 (Đế khớp 1)",
+    "file": "meshes/parts/joint_base.stl",
+    "color": "#d97324",
+    "dims": [
+      64.5,
+      58.0,
+      68.73
+    ],
+    "volume_mm3": 65444.9,
+    "note": "PETG · Hốc servo sâu 30.0mm · Ôm MG996R #1 · Spigot ổ bi M3"
+  },
+  {
+    "id": "base_body",
+    "name": "3. V6 Clamp Body (Thân kẹp bàn)",
+    "file": "meshes/parts/base_body.stl",
+    "color": "#e67e22",
+    "dims": [
+      66.0,
+      60.5,
+      103.0
+    ],
+    "volume_mm3": 201612.7,
+    "note": "PETG · Kẹp mép bàn · Ngàm nối Joint Base"
+  },
+  {
+    "id": "base_jaw",
+    "name": "4. V6 Clamp Jaw (Má kẹp dưới)",
+    "file": "meshes/parts/base_jaw.stl",
+    "color": "#f59e0b",
+    "dims": [
+      47.5,
+      52.0,
+      74.0
+    ],
+    "volume_mm3": 38635.7,
+    "note": "PETG · Đệm kẹp bàn chống trượt"
+  },
+  {
+    "id": "base_screw",
+    "name": "5. V6 Clamp Screw (Vít siết bàn)",
+    "file": "meshes/parts/base_screw.stl",
+    "color": "#fbbf24",
+    "dims": [
+      41.42,
+      41.42,
+      89.5
+    ],
+    "volume_mm3": 31001.7,
+    "note": "PETG · Ren M24×3 bước lớn"
+  },
+  {
+    "id": "mg996r",
+    "name": "6. Servo MG996R (+5mm Wire Boot)",
+    "file": "meshes/parts/mg996r.stl",
+    "color": "#2a2f38",
+    "dims": [
+      54.0,
+      19.7,
+      43.9
+    ],
+    "volume_mm3": 32243.6,
+    "note": "Phần cứng · Mô-men ~10 kg·cm · Trục 25T"
+  },
+  {
+    "id": "horn_25t",
+    "name": "7. 25T CNC Round Horn (Ø20)",
+    "file": "meshes/parts/horn_25t.stl",
+    "color": "#cf2e38",
+    "dims": [
+      20.0,
+      20.0,
+      6.0
+    ],
+    "volume_mm3": 884.3,
+    "note": "Nhôm CNC · 4 lỗ M3 trên PCD Ø14.0 mm"
+  },
+  {
+    "id": "bearing_624zz",
+    "name": "8. Ổ bi 624ZZ (4×13×5 mm)",
+    "file": "meshes/parts/bearing_624zz.stl",
+    "color": "#dbe2ea",
+    "dims": [
+      13.0,
+      13.0,
+      5.1
+    ],
+    "volume_mm3": 572.0,
+    "note": "Thép · ID 4mm · OD 13mm · Dày 5mm"
+  },
+  {
+    "id": "bolt_m4",
+    "name": "9. Vít lục giác M4×12",
+    "file": "meshes/parts/bolt_m4.stl",
+    "color": "#94a3b8",
+    "dims": [
+      7.0,
+      7.0,
+      16.0
+    ],
+    "volume_mm3": 304.7,
+    "note": "Inox/Thép · Gắn ổ bi 624ZZ giữ càng"
+  }
+]
