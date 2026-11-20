@@ -46,7 +46,7 @@ For 3D printer operations (Creality SPARKX i7, Klipper/Moonraker, CFS-Nano slots
    - Print orientation: flat on **`Z = 0.00 mm`**, `PrintReady_*.stl` centered at `XY = (0, 0)` with `min_z = 0.000`.
 2. **Servo Orientation & Wire Routing on Links (CRITICAL):**
    - **Output Spline (`Shaft`) MUST sit at the `+X` outer beveled tip** (`R_corner = sqrt(9^2 + 18^2) = 20.12 mm`, matching `Joint Base V6`).
-   - **Real `MG996R` Wire Exit (`+X` Shaft End — Joint Base V6 Style Bay):** Because the 3-wire cable emerges from the bottom edge of the *same* `+X` end as the shaft, provide a **V6 open-corner wire bay (`X=74.7..85.0, Y=-7.25..+15.25, Z=5.50..22.50`)** matching `Joint Base V6` (`#9`), leaving a `13.0 mm` top M3 deck (`Z=22.5..35.5`) and `9.0 mm` `+Y` beam (`+15.25..+24.25`) solid (`0.000 mm³` collision across `0..±105°`).
+   - **Real `MG996R` Wire Exit (`+X` Shaft End — Joint Base V6 Style Bay + Lead-in Groove):** Because the 3-wire cable emerges from the bottom edge of the *same* `+X` end as the shaft, provide both a **V6 centered V-arch lead-in groove (`#7b`: `4.2 mm` deep `Y=±3.4→±2.0 mm` from `Z=35.5→22.0` between M3 screws)** so wires tuck in first during drop-in, and a **V6 open-corner wire bay (`X=74.7..85.0, Y=-7.25..+15.25, Z=5.50..22.50`)** matching `Joint Base V6` (`#9`), leaving a `13.0 mm` top M3 deck (`Z=22.5..35.5`) and `9.0 mm` `+Y` beam (`+15.25..+24.25`) solid (`0.000 mm³` collision across `0..±105°`).
 3. **Throat Clearance (`BRIDGE_X_MIN`):**
    - With distal nose `R_corner = 20.12 mm`, keep **`BRIDGE_X_MIN ≥ 17.5 mm`** (`≥ 23.5 mm` throat from `PIVOT_X = -6.0`) to guarantee **`0.000 mm³` collision** across **`0° .. ±105°`** with `> 1 mm` FDM print margin.
 4. **MG90S Cover (`u_break_cover_orig`) Preservation:**

@@ -164,6 +164,24 @@ def build_arm_link():
         with Locations((0.5 * (bay_x_min + bay_x_max), 0.5 * (bay_y_min + bay_y_max), 0.5 * (bay_z_min + bay_z_max))):
             Box(bay_x_max - bay_x_min, bay_y_max - bay_y_min, bay_z_max - bay_z_min)
 
+        # E2. Centered V-groove wire lead-in slot matching Joint Base V6 (#7b):
+        #     Runs straight down from top opening (Z=35.5) into bay #E (Z=22.0..36.5) along the inner +X wall
+        #     (X=76.5..80.7, Y=J2_SHAFT_Y +/-3.4 -> +/-2.0 mm), >=1.5 mm clear of Y=+/-5.0 M3 screw bores,
+        #     so the servo wire tucks in FIRST before sliding MG996R #2 down into the pocket.
+        groove_z_min = bay_z_max - 0.5      # 22.00 mm (0.5 mm overlap into wire bay #E)
+        groove_z_max = HOUSING_TOP_Z + 1.0  # 36.50 mm (opens cleanly out top rim Z=35.5)
+        with BuildSketch(Plane.XY.offset(groove_z_min)) as sk_wire_lead:
+            with BuildLine():
+                Polyline(
+                    (NOSE_BEVEL_START_X - 0.2, J2_SHAFT_Y - 3.4),
+                    (NOSE_BEVEL_START_X + 4.2, J2_SHAFT_Y - 2.0),
+                    (NOSE_BEVEL_START_X + 4.2, J2_SHAFT_Y + 2.0),
+                    (NOSE_BEVEL_START_X - 0.2, J2_SHAFT_Y + 3.4),
+                    (NOSE_BEVEL_START_X - 0.2, J2_SHAFT_Y - 3.4),
+                )
+            make_face()
+        extrude(sk_wire_lead.sketch, amount=(groove_z_max - groove_z_min))
+
         # F. Coaxial M3 pilot bore in Z=0..5.5 bottom bearing bridge at (66.0, 8.75) for 623ZZ (3x10x4)
         with Locations((J2_SHAFT_X, J2_SHAFT_Y, 2.4)):
             Cylinder(radius=1.30, height=5.0)
