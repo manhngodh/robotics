@@ -106,7 +106,8 @@ MJ_T = 14.0
 MJ_X_MIN = -30.5
 MJ_X_MAX = 17.0
 MJ_HALF_W = 26.0
-SWIVEL_R = 7.6
+SWIVEL_R = 7.6              # Screw pin stays SWIVEL_R - 0.6 = 7.00 mm (backward compatible!)
+SWIVEL_POCKET_R = 7.35      # 0.35 mm radial slip fit on jaw socket (reduces wobble without guide rods)
 
 
 def make_trap_thread_cutter(major_r, minor_r, pitch, height):
@@ -155,10 +156,6 @@ def build_clamp_body():
                     Cylinder(radius=M4_HOLE_R, height=13.0, mode=Mode.SUBTRACT)
                 with Locations((bx, by + sy * 3.6, 10.75)):
                     Box(M4_NUT_AF, 14.5, M4_NUT_H, mode=Mode.SUBTRACT)
-
-        for sy in (-1, 1):
-            with Locations((GUIDE_X, sy * GUIDE_Y, 0.5 * (LOWER_JAW_Z_BOT + LOWER_JAW_Z_TOP))):
-                Cylinder(radius=GUIDE_BORE_R, height=LOWER_JAW_T + 2.0, mode=Mode.SUBTRACT)
 
         with Locations((SCREW_X, 0, 0.5 * (LOWER_JAW_Z_BOT + LOWER_JAW_Z_TOP))):
             Cylinder(radius=THREAD_MINOR_R_NUT, height=LOWER_JAW_T + 2.0, mode=Mode.SUBTRACT)
@@ -295,11 +292,8 @@ def build_moving_jaw(z_top=-SAMPLE_DESK_T):
         for gx in range(-25, 15, 6):
             with Locations((gx, 0, z_top - 0.4)):
                 Box(2.0, MJ_HALF_W * 2 - 6.0, 1.0, mode=Mode.SUBTRACT)
-        for sy in (-1, 1):
-            with Locations((GUIDE_X, sy * GUIDE_Y, z_bot - rod_len / 2.0)):
-                Cylinder(radius=GUIDE_ROD_R, height=rod_len)
         with Locations((SCREW_X, 0, z_bot + 2.5)):
-            Cylinder(radius=SWIVEL_R, height=5.5, mode=Mode.SUBTRACT)
+            Cylinder(radius=SWIVEL_POCKET_R, height=5.5, mode=Mode.SUBTRACT)
     return p.part
 
 

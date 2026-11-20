@@ -35,7 +35,7 @@ For 3D printer operations (Creality SPARKX i7, Klipper/Moonraker, CFS-Nano slots
 | **MG996R 2-Arm Yoke Gap** | **`56.50 mm` nominal (`≥ 56.0 mm` hard minimum)** | `MINUS_Y_IN = -19.50`, `PLUS_Y_IN = +37.00`; symmetric centerline `J2_SHAFT_Y = +8.75 mm`. Accommodates real MG996R + 25T CNC horn + M3 spacer with print tolerance. |
 | **Horn Side (`-Y` Arm)** | `4.5 mm` thick (`Y=[-24.0, -19.5]`), `Ø21 mm` lug (`R=10.5`), `Ø6.2` center + `4× Ø2.20 mm` on `Ø14.0 PCD` (`45°` phase) + `Ø4.6×1.5 mm` outer counterbore | Matches **25T Round Plastic Horn (`Ø20 mm`)** & included M2/self-tapping servo box screws (`3.0 mm` web under screw head so short screws reach cleanly into plastic horn). |
 | **Bearing Side (`+Y` Arm)** | `5.0 mm` thick (`Y=[+37.0, +42.0]`), `Ø20 mm` lug (`R=10.0`), `1.0 mm` inner lip `Ø7.0 mm` + `4.0 mm` pocket **`Ø10.25 mm`** | Press/slip fit for **`623ZZ` (`3 × 10 × 4 mm`)**. **MUST pair with M3 hardware** (`Ø2.60 mm` M3 pilot bore on mating boss/base & **`OD ≤ 5.5 mm` M3 spacer** so bearing shield is never pinched!). |
-| **Base Desk Clamp (`V6`)** | `10–50 mm` desk opening, `Tr16 × 3` leadscrew (`0.35 mm` radial clearance), `4× M4` deck bolts + `3 mm` shear key | Paired `V6 Body` + `V6 Jaw` + `V6 Screw` + `V6 Joint Pylon`. |
+| **Base Desk Clamp (`V6`)** | `10–50 mm` desk opening, `Tr16 × 3` leadscrew (`0.35 mm` radial clearance), `4× M4` deck bolts + `3 mm` shear key | Paired solid `V6 Body` + rod-free `V6 Jaw` (`Ø14.70` swivel, `±3.3°` self-stop) + `V6 Screw` + `V6 Joint Pylon`. |
 
 ---
 
