@@ -318,18 +318,18 @@ def build_m8_knob():
                 ang = k * 45.0
                 with Locations((knob_r * math.cos(math.radians(ang)), knob_r * math.sin(math.radians(ang)), 0)):
                     Cylinder(radius=3.5, height=knob_h + 1.0, mode=Mode.SUBTRACT)
-        # M8x1.25 minor bore + chamfered lead-in at top Z=16.5..18.0
-        with Locations((0, 0, floor_h + thread_h / 2.0)):
-            Cylinder(radius=M8_MINOR_R_NUT, height=thread_h + 1.0, mode=Mode.SUBTRACT)
         with Locations((0, 0, knob_h - 0.75)):
             Cone(bottom_radius=M8_MINOR_R_NUT, top_radius=4.8, height=1.5, mode=Mode.SUBTRACT)
-    # Radial Ø2.60 mm M3 lock bore + Ø6.2mm counterbore pockets (outside BuildPart context!)
+    # Build ONE non-coplanar solid threaded bolt plug (core_cyl + helical rib) before subtracting!
+    # Avoiding coplanar top/bottom faces prevents OCCT from clipping upper thread turns.
+    core_cyl = Pos(0, 0, floor_h + (thread_h + 1.0) / 2.0) * Cylinder(radius=M8_MINOR_R_NUT, height=thread_h + 1.0)
+    tc = Pos(0, 0, floor_h + 0.3) * make_trap_thread_cutter(M8_MAJOR_R_NUT, M8_MINOR_R_NUT, M8_PITCH, thread_h + 0.4)
+    plug = (core_cyl + tc).clean()
     z_m3 = floor_h + thread_h * 0.5
     p_m3 = Pos(0, 0, z_m3) * Rot(0, 0, 22.5) * Rot(0, 90, 0) * Cylinder(radius=1.30, height=knob_r * 2 + 2.0)
     cb_1 = Pos(0, 0, z_m3) * Rot(0, 0, 22.5) * Pos(19.25, 0, 0) * Rot(0, 90, 0) * Cylinder(radius=3.10, height=5.5)
     cb_2 = Pos(0, 0, z_m3) * Rot(0, 0, 202.5) * Pos(19.25, 0, 0) * Rot(0, 90, 0) * Cylinder(radius=3.10, height=5.5)
-    thread_cutter = Pos(0, 0, floor_h) * make_trap_thread_cutter(M8_MAJOR_R_NUT, M8_MINOR_R_NUT, M8_PITCH, thread_h)
-    return p.part - (thread_cutter + p_m3 + cb_1 + cb_2)
+    return (p.part - plug - p_m3 - cb_1 - cb_2).clean()
 
 
 def build_m8_backup_nut():
