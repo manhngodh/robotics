@@ -109,7 +109,7 @@
 
   <div id="hud">
     <h1>MStation Robot Arm V6</h1>
-    <div class="sub">1 Joint Base + 2 Join Links + 2-Arm MG996R→MG90S · Khe càng 56.5mm · 623ZZ (M3) &amp; 25T Horn</div>
+    <div class="sub">Kẹp bàn V6 M8×120 + Joint Base + 2 Join Links + 2-Arm 96R→90S · Khe càng 56.5mm · 623ZZ (M3)</div>
 
     <div class="mode-tabs">
       <button class="mode-tab active" id="tab-parts">Xem từng Part (13)</button>
@@ -211,6 +211,8 @@
 
       <div class="section">
         <div class="section-title">Hiển thị chi tiết</div>
+        <label class="check-row"><input type="checkbox" checked data-layer="clamp"><span class="swatch" style="background:#e67e22"></span>V6 Clamp Body + Jaw (M8)</label>
+        <label class="check-row"><input type="checkbox" checked data-layer="clamp_hw"><span class="swatch" style="background:#fbbf24"></span>Bulông M8×120 + Tán/Núm + 4× M4</label>
         <label class="check-row"><input type="checkbox" checked data-layer="base"><span class="swatch" style="background:#d97324"></span>Joint Base V6 (M3 Ø2.6)</label>
         <label class="check-row"><input type="checkbox" checked data-layer="link1"><span class="swatch" style="background:#298fd6"></span>Join #1 (56.5mm / 72mm)</label>
         <label class="check-row"><input type="checkbox" checked data-layer="link2"><span class="swatch" style="background:#2eb885"></span>Join #2 (56.5mm / 72mm)</label>
@@ -281,6 +283,10 @@
     scene.add(asmRoot);
 
     const materials = {
+      clamp: new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.42, metalness: 0.08 }),
+      clamp_jaw: new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.38, metalness: 0.08 }),
+      clamp_nut: new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.35, metalness: 0.12 }),
+      clamp_knob: new THREE.MeshStandardMaterial({ color: 0xfbbf24, roughness: 0.38, metalness: 0.08 }),
       base: new THREE.MeshStandardMaterial({ color: 0xd97324, roughness: 0.42, metalness: 0.08 }),
       link1: new THREE.MeshStandardMaterial({ color: 0x298fd6, roughness: 0.38, metalness: 0.08 }),
       link2: new THREE.MeshStandardMaterial({ color: 0x2eb885, roughness: 0.38, metalness: 0.08 }),
@@ -290,38 +296,44 @@
       bearings: new THREE.MeshStandardMaterial({ color: 0xdbe2ea, roughness: 0.2, metalness: 0.85 }),
     };
 
-    const layers = { base: [], link1: [], link2: [], link3: [], servos: [], horns: [], bearings: [] };
+    const layers = { clamp: [], clamp_hw: [], base: [], link1: [], link2: [], link3: [], servos: [], horns: [], bearings: [] };
     const meshRefs = {};
     const specs = [
-      ['joint_base', 'meshes/joint_base.stl', asmRoot, 'base'],
-      ['mg1', 'meshes/mg1.stl', asmRoot, 'servos'],
-      ['link1', 'meshes/link1.stl', j1Group, 'link1'],
-      ['horn1', 'meshes/horn1.stl', j1Group, 'horns'],
-      ['b1', 'meshes/b1.stl', j1Group, 'bearings'],
-      ['m4_1', 'meshes/m4_1.stl', j1Group, 'bearings'],
-      ['mg2', 'meshes/mg2.stl', j1Group, 'servos'],
-      ['b2', 'meshes/b2.stl', j1Group, 'bearings'],
-      ['m4_2', 'meshes/m4_2.stl', j1Group, 'bearings'],
-      ['link2', 'meshes/link2.stl', j2Group, 'link2'],
-      ['horn2', 'meshes/horn2.stl', j2Group, 'horns'],
-      ['mg3', 'meshes/mg3.stl', j2Group, 'servos'],
-      ['horn3', 'meshes/horn3.stl', j2Group, 'horns'],
-      ['b3', 'meshes/b3.stl', j2Group, 'bearings'],
-      ['m4_3', 'meshes/m4_3.stl', j2Group, 'bearings'],
-      ['link3', 'meshes/link3_mg90s.stl', j3Group, 'link3'],
+      ['clamp_body', 'meshes/clamp_body.stl', asmRoot, 'clamp', 'clamp'],
+      ['clamp_jaw', 'meshes/clamp_jaw.stl', asmRoot, 'clamp', 'clamp_jaw'],
+      ['clamp_m8_nut', 'meshes/clamp_m8_nut.stl', asmRoot, 'clamp_hw', 'clamp_nut'],
+      ['clamp_m8_bolt', 'meshes/clamp_m8_bolt.stl', asmRoot, 'clamp_hw', 'bearings'],
+      ['clamp_m8_knob', 'meshes/clamp_m8_knob.stl', asmRoot, 'clamp_hw', 'clamp_knob'],
+      ['clamp_m4', 'meshes/clamp_m4_bolts.stl', asmRoot, 'clamp_hw', 'bearings'],
+      ['joint_base', 'meshes/joint_base.stl', asmRoot, 'base', 'base'],
+      ['mg1', 'meshes/mg1.stl', asmRoot, 'servos', 'servos'],
+      ['link1', 'meshes/link1.stl', j1Group, 'link1', 'link1'],
+      ['horn1', 'meshes/horn1.stl', j1Group, 'horns', 'horns'],
+      ['b1', 'meshes/b1.stl', j1Group, 'bearings', 'bearings'],
+      ['m4_1', 'meshes/m4_1.stl', j1Group, 'bearings', 'bearings'],
+      ['mg2', 'meshes/mg2.stl', j1Group, 'servos', 'servos'],
+      ['b2', 'meshes/b2.stl', j1Group, 'bearings', 'bearings'],
+      ['m4_2', 'meshes/m4_2.stl', j1Group, 'bearings', 'bearings'],
+      ['link2', 'meshes/link2.stl', j2Group, 'link2', 'link2'],
+      ['horn2', 'meshes/horn2.stl', j2Group, 'horns', 'horns'],
+      ['mg3', 'meshes/mg3.stl', j2Group, 'servos', 'servos'],
+      ['horn3', 'meshes/horn3.stl', j2Group, 'horns', 'horns'],
+      ['b3', 'meshes/b3.stl', j2Group, 'bearings', 'bearings'],
+      ['m4_3', 'meshes/m4_3.stl', j2Group, 'bearings', 'bearings'],
+      ['link3', 'meshes/link3_mg90s.stl', j3Group, 'link3', 'link3'],
     ];
 
-    const CACHE_V = '20261120_m8clamp';
+    const CACHE_V = '20261120_clampasm';
     const loader = new STLLoader();
     let asmLoaded = 0;
-    specs.forEach(([id, url, parent, key]) => {
+    specs.forEach(([id, url, parent, layerKey, matKey]) => {
       loader.load(`${url}?v=${CACHE_V}`, (geom) => {
         geom.computeVertexNormals();
-        const mesh = new THREE.Mesh(geom, materials[key]);
+        const mesh = new THREE.Mesh(geom, materials[matKey]);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         parent.add(mesh);
-        layers[key].push(mesh);
+        layers[layerKey].push(mesh);
         meshRefs[id] = mesh;
         asmLoaded++;
         updateStatus();
@@ -890,10 +902,10 @@
     // 4. MODE SWITCHING
     // ========================
     const camPresets = {
-      iso:   [[195, -210, 225], [-8, 0, 145]],
-      front: [[-8, -295, 145], [-8, 0, 145]],
-      side:  [[285, 0, 145], [-8, 0, 145]],
-      top:   [[-8, -1, 390], [-8, 0, 145]],
+      iso:   [[265, -285, 195], [-10, 0, 55]],
+      front: [[-10, -400, 55], [-10, 0, 55]],
+      side:  [[390, 0, 55], [-10, 0, 55]],
+      top:   [[-10, -1, 470], [-10, 0, 55]],
     };
 
     function setMode(mode) {
@@ -916,7 +928,7 @@
         }
         framePartCamera(currentPartCam);
       } else {
-        grid.position.z = 16.0;
+        grid.position.z = -160.0;
         const [pos, tgt] = camPresets.iso;
         camera.position.set(...pos);
         controls.target.set(...tgt);
@@ -971,6 +983,12 @@
       j2Group.position.set(8.75, 0.0, 72.0 + 58.0 * e);
       j3Group.position.set(0.0, -3.15, 72.0 + 55.0 * e);
 
+      if (meshRefs.clamp_body)    meshRefs.clamp_body.position.set(0, 0, -52.0 * e);
+      if (meshRefs.clamp_jaw)     meshRefs.clamp_jaw.position.set(28.0 * e, 0, -18.0 * e);
+      if (meshRefs.clamp_m8_nut)  meshRefs.clamp_m8_nut.position.set(0, 0, -24.0 * e);
+      if (meshRefs.clamp_m8_bolt) meshRefs.clamp_m8_bolt.position.set(0, 0, -90.0 * e);
+      if (meshRefs.clamp_m8_knob) meshRefs.clamp_m8_knob.position.set(0, 0, -125.0 * e);
+      if (meshRefs.clamp_m4)      meshRefs.clamp_m4.position.set(0, 0, 22.0 * e);
       if (meshRefs.mg1)   meshRefs.mg1.position.set(36.0 * e, 0, 0);
       if (meshRefs.horn1) meshRefs.horn1.position.set(-28.0 * e, 0, 0);
       if (meshRefs.b1)    meshRefs.b1.position.set(22.0 * e, 0, 0);
@@ -1012,7 +1030,7 @@
     xrayBtn.addEventListener('click', () => {
       xray = !xray;
       xrayBtn.classList.toggle('active', xray);
-      ['base', 'link1', 'link2', 'link3'].forEach((k) => {
+      ['clamp', 'clamp_jaw', 'base', 'link1', 'link2', 'link3'].forEach((k) => {
         materials[k].transparent = xray;
         materials[k].opacity = xray ? 0.42 : 1.0;
         materials[k].depthWrite = !xray;
