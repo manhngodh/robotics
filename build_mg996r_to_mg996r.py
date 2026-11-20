@@ -38,7 +38,7 @@ BRIDGE_X_MIN = 17.5          # 23.5 mm throat from pivot (-6.0) -> >1 mm margin 
 BRIDGE_X_MAX = 22.5          # 6.0 mm solid crossbar
 BRIDGE_Z_MAX = 35.5          # Flush with HOUSING_TOP_Z=35.5 -> rock-solid straight top bridge & zero neck step!
 
-# --- Joint 2 (Top MG996R #2: SHAFT at +X outer tip R=20.12 mm, WIRE BOOT facing -X into neck cable bay!) ---
+# --- Joint 2 (Top MG996R #2: SHAFT & REAL WIRE at +X outer tip R=20.12 mm, side-exit slot at -Y!) ---
 J2_SHAFT_X = 66.0            # 72.00 mm center-to-center; shaft near +X beveled tip (matches Joint Base V6!)
 J2_SHAFT_Y = 0.5 * (MINUS_Y_IN + PLUS_Y_IN)  # +8.75 mm: centered symmetrically inside 56.50 mm U-yoke gap [-19.5, +37.0]!
 J2_BODY_CX = J2_SHAFT_X - 10.35  # 55.65 mm (Body X=[35.30, 76.00], boot X=[30.30, 35.30], tabs X=[28.65, 82.65])
@@ -148,23 +148,11 @@ def build_arm_link():
                 with Locations((J2_BODY_CX + sx_off, J2_SHAFT_Y + sy_off, HOUSING_TOP_Z - 5.75)):
                     Cylinder(radius=MG996R_PILOT_R, height=11.7)
 
-        # E. Wire-boot through-height slot (-X wall between M3 screws) & open-top neck cable bay (support-free!)
-        #    1) Through-height trapezoid slot (X=28.0..35.2, Y_off=+/-3.5 -> +/-2.0, Z=5.5..36.5) so MG996R #2 + 5mm boot
-        #       drops straight in vertically without colliding with top deck, while keeping -X M3 bores (Y_off=+/-5.0) solid!
-        with BuildSketch(Plane.XY.offset(POCKET_FLOOR_Z)) as sk_boot_slot:
-            with BuildLine():
-                Polyline(
-                    (HOUSING_X_MIN, J2_SHAFT_Y - 3.5),
-                    (35.2, J2_SHAFT_Y - 3.5),
-                    (35.2, J2_SHAFT_Y + 3.5),
-                    (HOUSING_X_MIN, J2_SHAFT_Y + 3.5),
-                    (HOUSING_X_MIN, J2_SHAFT_Y - 3.5),
-                )
-            make_face()
-        extrude(sk_boot_slot.sketch, amount=(HOUSING_TOP_Z + 1.0) - POCKET_FLOOR_Z)
-        #    2) Open-top neck cable bay (X=22.6..28.2, Y_off=+/-4.5, Z=5.5..36.5) ahead of crossbar (X=17.5..22.5)
-        with Locations((0.5 * (22.6 + 28.2), J2_SHAFT_Y, 0.5 * (POCKET_FLOOR_Z + HOUSING_TOP_Z + 1.0))):
-            Box(28.2 - 22.6, 9.0, (HOUSING_TOP_Z + 1.0) - POCKET_FLOOR_Z)
+        # E. Real MG996R #2 +X shaft-end wire slot through -Y side wall (X=73.0..77.8, Y=-7.5..+12.0, Z=7.5..36.5)
+        #    - Gives 1.80 mm rear clearance behind X=76.0 servo face & exits cleanly out -Y side without blocking +X tip (84.0)
+        #    - Stays >=1.15 mm clear of +X M3 bores (80.15, Y=3.75/13.75) & open to Z=36.5 for zero-clash vertical drop-in!
+        with Locations((0.5 * (73.0 + 77.8), 0.5 * (-7.5 + 12.0), 0.5 * (7.5 + HOUSING_TOP_Z + 1.0))):
+            Box(77.8 - 73.0, 12.0 - (-7.5), (HOUSING_TOP_Z + 1.0) - 7.5)
 
         # F. Coaxial M3 pilot bore in Z=0..5.5 bottom bearing bridge at (66.0, 8.75) for 623ZZ (3x10x4)
         with Locations((J2_SHAFT_X, J2_SHAFT_Y, 2.4)):
@@ -190,7 +178,7 @@ def place_in_world(link, shaft_z=67.0, angle_deg=0.0):
 
 
 def build_virtual_mg996r2():
-    """Virtual MG996R #2 seated on HOUSING_TOP_Z=35.5 (shaft at +X=66.0, wire boot at -X=30.3..35.3)."""
+    """Virtual MG996R #2 seated on HOUSING_TOP_Z=35.5 (shaft at +X=66.0, real wire exits +X bottom edge turning -Y)."""
     z0 = HOUSING_TOP_Z - 27.5
     with BuildPart() as m:
         with Locations((J2_BODY_CX, J2_SHAFT_Y, z0 + 27.5 / 2.0)):
@@ -201,9 +189,9 @@ def build_virtual_mg996r2():
             Box(54.0, 19.7, 2.6)
         with Locations((J2_SHAFT_X, J2_SHAFT_Y, HOUSING_TOP_Z + 11.2 + 2.4)):
             Cylinder(radius=2.95, height=4.8)
-        # 5.0 mm wire boot facing -X into cable bay
-        with Locations((J2_BODY_CX - 20.35 - 2.5, J2_SHAFT_Y, z0 + 2.0 + 4.5)):
-            Box(5.0, 6.5, 9.0)
+        # Real MG996R 3-wire ribbon exit: exits +X face (X=76.0..77.0) at Z=9.5..13.5 & turns out -Y side slot
+        with Locations((75.5, J2_SHAFT_Y - 7.5, 11.5)):
+            Box(3.0, 14.0, 3.0)
     return m.part
 
 

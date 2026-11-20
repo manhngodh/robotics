@@ -82,6 +82,18 @@ def main():
         v = sum(s.volume for s in inter.solids()) if inter else 0.0
         max_dz_clash = max(max_dz_clash, v)
     ok &= check("MG996R #2 vertical drop-in (dz=0..25 mm)", max_dz_clash < 1e-3, f"max clash={max_dz_clash:.3f} mm3")
+    # Verify Join Link MG996R #2 + real +X shaft-end -Y wire exit clears all angles of Join #2 and 2-Arm
+    cov2_proto = import_step(os.path.join(DIR, "arm_link_mg996r_to_mg90s_2arm.step"))
+    from build_mg996r_to_mg90s_2arm import place_on_joint2_local as place_2arm_j2
+    from assemble_2joints_demo import place_on_joint2_local as place_jl_j2
+    wire_sweep_clash = 0.0
+    for ang in (0, 45, 90, 105, -45, -90, -105):
+        c1 = place_jl_j2(l1, ang2_deg=ang).intersect(m2)
+        c2 = place_2arm_j2(cov2_proto, ang2_deg=ang).intersect(m2)
+        for c in (c1, c2):
+            if c:
+                wire_sweep_clash = max(wire_sweep_clash, sum(s.volume for s in c.solids()))
+    ok &= check("MG996R #2 (+X wire out -Y slot) 0..+/-105 deg clearance vs Link2 & 2-Arm", wire_sweep_clash < 1e-3, f"max clash={wire_sweep_clash:.3f} mm3")
 
     print("\n=== 4. MG90S Cavity Freedom & Print Bevel Check ===")
     orig = import_step(os.path.join(DIR, "u_break_cover_orig.step"))

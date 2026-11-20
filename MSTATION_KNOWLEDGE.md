@@ -24,7 +24,7 @@ For 3D printer operations (Creality SPARKX i7, Klipper/Moonraker, CFS-Nano slots
 
 | Component | Key Dimensions (`mm`) | Mounting / Interface | Source CAD |
 | :--- | :--- | :--- | :--- |
-| **MG996R** | Body `40.7 × 19.7 × 38.7`, tabs `54.0 × 19.7 × 2.6`, spline `+10.35 mm` from center (user hardware has flush bottom wire, no protruding `5 mm` rubber boot; wire relief still kept in `-X` slot) | `30.00 mm` pocket depth, pocket `41.8 × 20.4 mm`, `4× Ø2.4 mm` M3 pilot bores (`49.0 × 10.0 mm` pitch) | [assemble_joint1_demo.py](./assemble_joint1_demo.py), [build_mg996r_to_mg996r.py](./build_mg996r_to_mg996r.py) |
+| **MG996R** | Body `40.7 × 19.7 × 38.7`, tabs `54.0 × 19.7 × 2.6`, spline `+10.35 mm` from center. **Real wire exits at bottom edge on the SAME `+X` end as the output shaft** (`+20.35 mm`, `Z=1.5..5.5` above bottom cap, flush with no `5 mm` boot) | `30.00 mm` pocket depth, pocket `41.8 × 20.4 mm`, `4× Ø2.4 mm` M3 pilot bores (`49.0 × 10.0 mm` pitch); requires `+X` wire-exit relief | [assemble_joint1_demo.py](./assemble_joint1_demo.py), [build_mg996r_to_mg996r.py](./build_mg996r_to_mg996r.py) |
 | **MG90S** | Body `22.8 × 12.2 × 22.8`, ears `32.0 × 12.2 × 2.5` (tabs at `Z=16.0..18.5`), `20T` spline at `+4.25 mm` (`Ø4.56`), `-X` 3-wire ribbon | `Ø1.60 mm` M2 pilot bores (`28.0 mm` center pitch in `u_break_cover_orig`, `27.5 mm` nominal U-slots) | [build_mg90s_real.py](./build_mg90s_real.py), [u_break_cover_orig.step](./u_break_cover_orig.step) |
 | **DC180 Motor** | Flat-oval body `Ø20.4 × 15.4 × 32.0 mm` (`0.25 mm` print clearance → `r_c=10.45`, `h_c=7.95`), collet `Ø12.5`, collar `Ø6.8` | Front `2× M2` (`Ø2.4 mm` through, `10 mm` pitch `Y=±5.0`) + `4× M3` cradle cap bolts (`Ø3.4` + hex nut traps) | [build_segment_dc180_v3.py](./build_segment_dc180_v3.py) |
 
@@ -44,9 +44,9 @@ For 3D printer operations (Creality SPARKX i7, Klipper/Moonraker, CFS-Nano slots
 1. **Dual-Shear Link Frame (`build_mg996r_to_mg996r.py`, `build_mg996r_to_mg90s_2arm.py`):**
    - Joint 1 pivot at **`(PIVOT_X = -6.0, Y = ..., PIVOT_Z)`** (`PIVOT_Z = 24.10` for `Join Link V6`; `PIVOT_Z = 15.50` for `MG996R->MG90S 2-Arm`).
    - Print orientation: flat on **`Z = 0.00 mm`**, `PrintReady_*.stl` centered at `XY = (0, 0)` with `min_z = 0.000`.
-2. **Servo Orientation on Links (CRITICAL):**
+2. **Servo Orientation & Wire Routing on Links (CRITICAL):**
    - **Output Spline (`Shaft`) MUST sit at the `+X` outer beveled tip** (`R_corner = sqrt(9^2 + 18^2) = 20.12 mm`, matching `Joint Base V6`).
-   - **Rubber Wire Boot (`5 mm`) MUST face `-X`** into a **through-height center slot** + open neck cable bay — NEVER point the wire boot out the distal tip (`+X`), which forces huge (`41.5 mm`+) arm throats.
+   - **Real `MG996R` Wire Exit (`+X` Shaft End):** Because the 3-wire cable emerges from the bottom edge of the *same* `+X` end as the shaft, provide a **vertical `-Y` side-exit slot (`X=73.0..77.2, Z=7.5..36.5`)** through the side wall right at the `+X` pocket corner — keeping the `+X` nose tip (`X=84.0`) and `+X` M3 bores (`X=80.15`) 100% solid and giving `0.000 mm³` collision across `0..±105°`.
 3. **Throat Clearance (`BRIDGE_X_MIN`):**
    - With distal nose `R_corner = 20.12 mm`, keep **`BRIDGE_X_MIN ≥ 17.5 mm`** (`≥ 23.5 mm` throat from `PIVOT_X = -6.0`) to guarantee **`0.000 mm³` collision** across **`0° .. ±105°`** with `> 1 mm` FDM print margin.
 4. **MG90S Cover (`u_break_cover_orig`) Preservation:**
@@ -61,7 +61,7 @@ For 3D printer operations (Creality SPARKX i7, Klipper/Moonraker, CFS-Nano slots
 | Role | Script | Print-Ready STL | Status / Notes |
 | :--- | :--- | :--- | :--- |
 | **Desk Clamp + J1 Pylon** | [build_arm_base_v6.py](./build_arm_base_v6.py) | `PrintReady_V6_Body/Jaw/Screw/Joint.stl` | ✅ `30.00 mm` pocket depth, `+X` boss **`Ø2.60 mm` (M3)** synced with `623ZZ (3×10×4 mm)`. Note: use `4× M4×16` deck bolts. |
-| **MG996R ↔ MG996R Link** | [build_mg996r_to_mg996r.py](./build_mg996r_to_mg996r.py) | [PrintReady_MG996R_to_MG996R.stl](./PrintReady_MG996R_to_MG996R.stl) | ✅ `56.50 mm` yoke gap, `72.00 mm` link, `623ZZ (3×10×4)` + M3 underside bore (`Ø2.60 mm`), shaft `+X`, through-height `-X` slot, `BRIDGE_X_MIN=17.5`, `0.000 mm³` sweeps. |
+| **MG996R ↔ MG996R Link** | [build_mg996r_to_mg996r.py](./build_mg996r_to_mg996r.py) | [PrintReady_MG996R_to_MG996R.stl](./PrintReady_MG996R_to_MG996R.stl) | ✅ `56.50 mm` yoke gap, `72.00 mm` link, `623ZZ (3×10×4)` + M3 underside bore (`Ø2.60 mm`), shaft `+X`, **`-Y` side wire-exit slot (`X=73.0..77.2`)**, `BRIDGE_X_MIN=17.5`, `0.000 mm³` sweeps. |
 | **MG996R → MG90S (2-Arm)** | [build_mg996r_to_mg90s_2arm.py](./build_mg996r_to_mg90s_2arm.py) | [PrintReady_MG996R_to_MG90S_2Arm.stl](./PrintReady_MG996R_to_MG90S_2Arm.stl) | ✅ `56.50 mm` yoke gap, `57.50 mm` link, `623ZZ (3×10×4)` M3 bearing pocket, `≤ 45°` bottom bevel (`-2.0, 0.0`), `0.000 mm³` sweeps on J1 & J2. |
 | **DC180 Toolhead V3** | [build_segment_dc180_v3.py](./build_segment_dc180_v3.py) | [PrintReady_DC180_Housing.stl](./PrintReady_DC180_Housing.stl), [PrintReady_DC180_Cap.stl](./PrintReady_DC180_Cap.stl) | ✅ `Ø20.4×15.4` flat-oval motor cradle + interlocking rail cap + `Tab 4` U-fork. |
 | **Hardware Assembly Audits** | [assemble_joint1_demo.py](./assemble_joint1_demo.py), [assemble_2joints_demo.py](./assemble_2joints_demo.py) | [arm_2joints_full_hardware_assembly.stl](./arm_2joints_full_hardware_assembly.stl) | ✅ Full 3× MG996R, `623ZZ`, 25T CNC horn, M3 bearing bolts interference audit. |
