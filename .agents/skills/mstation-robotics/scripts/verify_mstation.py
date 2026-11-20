@@ -75,14 +75,16 @@ def main():
         f"J2_SHAFT_X={jlink.J2_SHAFT_X}, J2_BODY_CX={jlink.J2_BODY_CX}, NOSE_TIP_X={jlink.NOSE_TIP_X}",
     )
     l1 = import_step(os.path.join(DIR, "arm_link_mg996r_to_mg996r.step"))
+    from assemble_joint1_demo import make_detailed_mg996r_local
+    m2_case = make_detailed_mg996r_local().translate((jlink.J2_BODY_CX, jlink.J2_SHAFT_Y, jlink.HOUSING_TOP_Z - 27.5))
     m2 = jlink.build_virtual_mg996r2()
     max_dz_clash = 0.0
     for dz in (0, 2, 5, 10, 15, 20, 25):
-        inter = l1.intersect(m2.translate((0, 0, dz)))
+        inter = l1.intersect(m2_case.translate((0, 0, dz)))
         v = sum(s.volume for s in inter.solids()) if inter else 0.0
         max_dz_clash = max(max_dz_clash, v)
     ok &= check("MG996R #2 vertical drop-in (dz=0..25 mm)", max_dz_clash < 1e-3, f"max clash={max_dz_clash:.3f} mm3")
-    # Verify Join Link MG996R #2 + real +X shaft-end -Y wire exit clears all angles of Join #2 and 2-Arm
+    # Verify Join Link MG996R #2 + real +X wire exiting Joint Base V6-style bay clears all angles of Join #2 and 2-Arm
     cov2_proto = import_step(os.path.join(DIR, "arm_link_mg996r_to_mg90s_2arm.step"))
     from build_mg996r_to_mg90s_2arm import place_on_joint2_local as place_2arm_j2
     from assemble_2joints_demo import place_on_joint2_local as place_jl_j2

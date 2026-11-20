@@ -148,11 +148,19 @@ def build_arm_link():
                 with Locations((J2_BODY_CX + sx_off, J2_SHAFT_Y + sy_off, HOUSING_TOP_Z - 5.75)):
                     Cylinder(radius=MG996R_PILOT_R, height=11.7)
 
-        # E. Real MG996R #2 +X shaft-end wire slot through -Y side wall (X=73.0..77.8, Y=-7.5..+12.0, Z=7.5..36.5)
-        #    - Gives 1.80 mm rear clearance behind X=76.0 servo face & exits cleanly out -Y side without blocking +X tip (84.0)
-        #    - Stays >=1.15 mm clear of +X M3 bores (80.15, Y=3.75/13.75) & open to Z=36.5 for zero-clash vertical drop-in!
-        with Locations((0.5 * (73.0 + 77.8), 0.5 * (-7.5 + 12.0), 0.5 * (7.5 + HOUSING_TOP_Z + 1.0))):
-            Box(77.8 - 73.0, 12.0 - (-7.5), (HOUSING_TOP_Z + 1.0) - 7.5)
+        # E. Wire & boot bay matching Joint Base V6 (#9 layout, 1-to-1 mirrored onto Join Link +X shaft end):
+        #    - Depth from top flange Z=35.5: starts 13.0 mm down (Z<=22.5, leaves 1.3 mm under 11.7 mm +X M3 screws!)
+        #      down to POCKET_FLOOR_Z=5.5 (keeps 5.5 mm bottom bearing bridge intact).
+        #    - Opens out -Y side wall (Y=-7.25) and +X tip (X=84.0), extending +6.5 mm past J2_SHAFT_Y (+15.25),
+        #      leaving a 9.0 mm solid +Y beam (+15.25..+24.25) supporting the top M3 flange!
+        bay_z_min = POCKET_FLOOR_Z          # 5.50 mm
+        bay_z_max = HOUSING_TOP_Z - 13.0    # 22.50 mm (1.30 mm below M3 bore bottoms at Z=23.8)
+        bay_x_min = NOSE_BEVEL_START_X - 1.8  # 74.70 mm
+        bay_x_max = NOSE_TIP_X + 1.0        # 85.00 mm
+        bay_y_min = J2_SHAFT_Y - 16.0       # -7.25 mm (opens cleanly past -6.75 outer -Y wall)
+        bay_y_max = J2_SHAFT_Y + 6.5        # +15.25 mm (keeps +15.25..+24.25 = 9.0 mm +Y beam solid)
+        with Locations((0.5 * (bay_x_min + bay_x_max), 0.5 * (bay_y_min + bay_y_max), 0.5 * (bay_z_min + bay_z_max))):
+            Box(bay_x_max - bay_x_min, bay_y_max - bay_y_min, bay_z_max - bay_z_min)
 
         # F. Coaxial M3 pilot bore in Z=0..5.5 bottom bearing bridge at (66.0, 8.75) for 623ZZ (3x10x4)
         with Locations((J2_SHAFT_X, J2_SHAFT_Y, 2.4)):
@@ -178,7 +186,7 @@ def place_in_world(link, shaft_z=67.0, angle_deg=0.0):
 
 
 def build_virtual_mg996r2():
-    """Virtual MG996R #2 seated on HOUSING_TOP_Z=35.5 (shaft at +X=66.0, real wire exits +X bottom edge turning -Y)."""
+    """Virtual MG996R #2 seated on HOUSING_TOP_Z=35.5 (shaft at +X=66.0, real wire exits +X=76.0 into V6-style bay)."""
     z0 = HOUSING_TOP_Z - 27.5
     with BuildPart() as m:
         with Locations((J2_BODY_CX, J2_SHAFT_Y, z0 + 27.5 / 2.0)):
@@ -189,9 +197,9 @@ def build_virtual_mg996r2():
             Box(54.0, 19.7, 2.6)
         with Locations((J2_SHAFT_X, J2_SHAFT_Y, HOUSING_TOP_Z + 11.2 + 2.4)):
             Cylinder(radius=2.95, height=4.8)
-        # Real MG996R 3-wire ribbon exit: exits +X face (X=76.0..77.0) at Z=9.5..13.5 & turns out -Y side slot
-        with Locations((75.5, J2_SHAFT_Y - 7.5, 11.5)):
-            Box(3.0, 14.0, 3.0)
+        # Real MG996R 3-wire ribbon exit: emerges at +X=76.0 (Z=9.5..13.5), bends -Y out bay (0..105 deg safe)
+        with Locations((77.5, J2_SHAFT_Y - 5.5, 11.5)):
+            Box(3.5, 11.0, 3.0)
     return m.part
 
 
