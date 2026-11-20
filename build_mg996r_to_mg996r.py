@@ -27,32 +27,33 @@ DIR = "/Users/manhngodh/development/robotics"
 PIVOT_X = -6.0
 PIVOT_Z = 24.10              # Coaxial midpoint of Z=[-1.0..49.2] MG996R #2 stack (with 30 mm pocket depth!)
 
-MINUS_Y_IN = -17.5
-MINUS_Y_OUT = -22.0
-PLUS_Y_IN = 32.7
-PLUS_Y_OUT = 38.7            # 6.0 mm arm thickness: 1.0 mm lip (32.7..33.7) + 5.0 mm pocket (33.7..38.7) for 624ZZ (4x13x5)
+MINUS_Y_IN = -19.5
+MINUS_Y_OUT = -24.0          # 4.5 mm horn arm; MINUS_Y_IN=-19.5..PLUS_Y_IN=+37.0 -> 56.50 mm inner gap (>=56 mm!)
+PLUS_Y_IN = 37.0
+PLUS_Y_OUT = 42.0            # 5.0 mm arm: 1.0 mm lip (37.0..38.0) + 4.0 mm pocket (38.0..42.0) for 623ZZ (3x10x4 M3)
 MINUS_ARM_R = 10.5           # Ø21 mm lug radius on -Y 25T horn arm
-PLUS_ARM_R = 11.5            # Ø23 mm lug radius around Ø13.25 mm 624ZZ pocket (4.88 mm radial wall, Z<=35.6!)
+PLUS_ARM_R = 10.0            # Ø20 mm lug radius around Ø10.25 mm 623ZZ pocket (4.88 mm radial wall!)
 
-BRIDGE_X_MIN = 35.5          # 41.5 mm throat from pivot (-6.0) -> clears 40.03 mm +X wire-end head across +/-105 deg!
-BRIDGE_X_MAX = 43.0          # 7.5 mm solid crossbar
+BRIDGE_X_MIN = 17.5          # 23.5 mm throat from pivot (-6.0) -> >1 mm margin past R_corner=20.12 mm across +/-105 deg!
+BRIDGE_X_MAX = 22.5          # 6.0 mm solid crossbar
 BRIDGE_Z_MAX = 35.5          # Flush with HOUSING_TOP_Z=35.5 -> rock-solid straight top bridge & zero neck step!
 
-# --- Joint 2 (Top MG996R #2, rotated 180 deg so WIRE BOOT faces +X tip & SHAFT faces -X at X=60.00!) ---
-J2_SHAFT_X = 60.0            # 66.00 mm center-to-center; shaft at -X end of pocket, wire exits +X beveled head!
-J2_SHAFT_Y = 0.5 * (MINUS_Y_IN + PLUS_Y_IN)  # +7.60 mm: centered symmetrically inside U-yoke inner gap [-17.5, +32.7]!
-J2_BODY_CX = J2_SHAFT_X + 10.35  # 70.35 mm (Body X=[50.00, 90.70], boot X=[90.70, 95.70], tabs X=[43.35, 97.35])
+# --- Joint 2 (Top MG996R #2: SHAFT at +X outer tip R=20.12 mm, WIRE BOOT facing -X into neck cable bay!) ---
+J2_SHAFT_X = 66.0            # 72.00 mm center-to-center; shaft near +X beveled tip (matches Joint Base V6!)
+J2_SHAFT_Y = 0.5 * (MINUS_Y_IN + PLUS_Y_IN)  # +8.75 mm: centered symmetrically inside 56.50 mm U-yoke gap [-19.5, +37.0]!
+J2_BODY_CX = J2_SHAFT_X - 10.35  # 55.65 mm (Body X=[35.30, 76.00], boot X=[30.30, 35.30], tabs X=[28.65, 82.65])
 
-POCKET_LEN_X = 41.3          # 40.7 + 0.6 mm base pocket length
+POCKET_X_MIN = 34.7          # 41.8 mm pocket length [34.7, 76.5] for 40.7 mm body + clearance
+POCKET_LEN_X = 41.8
 POCKET_WID_Y = 20.4          # 19.7 + 0.7 mm clearance -> Y=7.60 +/- 10.20
 POCKET_FLOOR_Z = 5.5         # 5.5 mm bottom bearing bridge (Z=0..5.5)
 HOUSING_TOP_Z = 35.5         # 30.0 mm pocket depth below mounting tabs (35.5 - 5.5 = 30.00 mm!)
 
-HOUSING_X_MIN = 49.0         # -X screw block: X=[43.0, 49.0]
+HOUSING_X_MIN = 28.0         # -X screw & wire-boot block: X=[28.0, 34.7] (screws at X=31.15, boot tunnel below!)
 HOUSING_HALF_Y = 15.5        # 31.0 mm outer width -> 5.3 mm solid side walls
-NOSE_BEVEL_START_X = 91.7    # Start beveled trapezoid at +X pocket end (matching Joint Base head)
-NOSE_TIP_X = 99.0            # Beveled flat tip X=99.0 (39.0 mm from J2_SHAFT_X -> R_corner=40.03 mm < 41.5 mm yoke!)
-NOSE_TIP_HALF_Y = 9.0        # Bevels ±15.5 -> ±9.0 (tab ends at 97.35 where half-width=10.47 mm -> fits cleanly inside!)
+NOSE_BEVEL_START_X = 76.5    # Start beveled trapezoid right at +X pocket end (matching Joint Base head)
+NOSE_TIP_X = 84.0            # Beveled flat tip X=84.0 (18.0 mm from J2_SHAFT_X -> R_corner=20.12 mm!)
+NOSE_TIP_HALF_Y = 9.0        # Bevels ±15.5 -> ±9.0 (tab ends at 82.65 where half-width=10.17 mm -> fits cleanly inside!)
 
 MG996R_SCREW_X_OFF = 24.5    # 49.0 mm longitudinal pitch -> X = 45.85 & 94.85
 MG996R_SCREW_Y_OFF = 5.0     # 10.0 mm transverse pitch -> Y = +/-5.0
@@ -131,69 +132,43 @@ def build_arm_link():
             with Locations((hx, 0.5 * (MINUS_Y_OUT + MINUS_Y_IN), hz)):
                 Cylinder(radius=1.6, height=7.0, rotation=(90, 0, 0))
 
-        # B. Joint 1 +Y 624ZZ (4x13x5) bearing pocket (Y=33.7..38.7 -> Ø13.25) & inner lip (Y=32.7..33.7 -> Ø9.5)
+        # B. Joint 1 +Y 623ZZ (3x10x4 M3) bearing pocket (Y=38.0..42.0 -> Ø10.25) & inner lip (Y=37.0..38.0 -> Ø7.0)
         with Locations((PIVOT_X, 0.5 * (PLUS_Y_IN + PLUS_Y_OUT), PIVOT_Z)):
-            Cylinder(radius=4.75, height=8.0, rotation=(90, 0, 0))
+            Cylinder(radius=3.50, height=8.0, rotation=(90, 0, 0))
         with Locations((PIVOT_X, 0.5 * ((PLUS_Y_IN + 1.0) + PLUS_Y_OUT + 2.0), PIVOT_Z)):
-            Cylinder(radius=6.625, height=(PLUS_Y_OUT - (PLUS_Y_IN + 1.0)) + 2.0, rotation=(90, 0, 0))
+            Cylinder(radius=5.125, height=(PLUS_Y_OUT - (PLUS_Y_IN + 1.0)) + 2.0, rotation=(90, 0, 0))
 
-        # C. Clean rectangular top-open MG996R #2 servo pocket (X=[49.00, 91.70], Y=6.60+/-10.20, Z=[5.5, 34.5])
-        with Locations((0.5 * (49.0 + 91.7), J2_SHAFT_Y, 0.5 * (POCKET_FLOOR_Z + HOUSING_TOP_Z + 1.0))):
-            Box(91.7 - 49.0, POCKET_WID_Y, (HOUSING_TOP_Z + 1.0) - POCKET_FLOOR_Z)
+        # C. Clean rectangular top-open MG996R #2 servo pocket (X=[34.70, 76.50], Y=7.60+/-10.20, Z=[5.5, 36.5])
+        with Locations((0.5 * (POCKET_X_MIN + NOSE_BEVEL_START_X), J2_SHAFT_Y, 0.5 * (POCKET_FLOOR_Z + HOUSING_TOP_Z + 1.0))):
+            Box(NOSE_BEVEL_START_X - POCKET_X_MIN, POCKET_WID_Y, (HOUSING_TOP_Z + 1.0) - POCKET_FLOOR_Z)
 
-        # D. 4x M3 pilot mounting bores on top flange Z=33.5 (49.0 x 10.0 mm pitch, 11.5 mm deep -> Z=22.0..33.5)
+        # D. 4x M3 pilot mounting bores on top flange Z=35.5 (49.0 x 10.0 mm pitch, 11.7 mm deep -> Z=23.8..35.5)
         for sx_off in (-MG996R_SCREW_X_OFF, MG996R_SCREW_X_OFF):
             for sy_off in (-MG996R_SCREW_Y_OFF, MG996R_SCREW_Y_OFF):
                 with Locations((J2_BODY_CX + sx_off, J2_SHAFT_Y + sy_off, HOUSING_TOP_Z - 5.75)):
                     Cylinder(radius=MG996R_PILOT_R, height=11.7)
 
-        # E. Clean V-arch/trapezoid boot & wire cutout ONLY on inner +X wall between the 2 M3 holes (matching Joint Base 7b!):
-        #    - Outer +X beveled nose (X=96.5..99.0) & -Y/+Y side walls stay 100% solid and unbroken!
-        #    1) Through-height trapezoid notch matching sketch (X=91.5..96.5, Y_off=+/-3.4 -> +/-2.0, Z=5.5..36.5)
-        with BuildSketch(Plane.XY.offset(POCKET_FLOOR_Z)) as sk_varch:
+        # E. Wire-boot through-height slot (-X wall between M3 screws) & open-top neck cable bay (support-free!)
+        #    1) Through-height trapezoid slot (X=28.0..35.2, Y_off=+/-3.5 -> +/-2.0, Z=5.5..36.5) so MG996R #2 + 5mm boot
+        #       drops straight in vertically without colliding with top deck, while keeping -X M3 bores (Y_off=+/-5.0) solid!
+        with BuildSketch(Plane.XY.offset(POCKET_FLOOR_Z)) as sk_boot_slot:
             with BuildLine():
                 Polyline(
-                    (91.5, J2_SHAFT_Y - 3.4),
-                    (96.5, J2_SHAFT_Y - 2.0),
-                    (96.5, J2_SHAFT_Y + 2.0),
-                    (91.5, J2_SHAFT_Y + 3.4),
-                    (91.5, J2_SHAFT_Y - 3.4),
+                    (HOUSING_X_MIN, J2_SHAFT_Y - 3.5),
+                    (35.2, J2_SHAFT_Y - 3.5),
+                    (35.2, J2_SHAFT_Y + 3.5),
+                    (HOUSING_X_MIN, J2_SHAFT_Y + 3.5),
+                    (HOUSING_X_MIN, J2_SHAFT_Y - 3.5),
                 )
             make_face()
-        extrude(sk_varch.sketch, amount=(HOUSING_TOP_Z + 1.0) - POCKET_FLOOR_Z)
-        #    2) Internal lower boot clearance below M3 screws (X=91.5..96.5, Y_off=+/-3.6, Z=5.5..20.5, 45-deg self-supporting taper)
-        with BuildSketch(Plane.YZ.offset(91.5)) as sk_boot_in:
-            with BuildLine():
-                Polyline(
-                    (J2_SHAFT_Y - 3.6, POCKET_FLOOR_Z),
-                    (J2_SHAFT_Y + 3.6, POCKET_FLOOR_Z),
-                    (J2_SHAFT_Y + 3.6, 18.8),
-                    (J2_SHAFT_Y + 2.0, 20.5),
-                    (J2_SHAFT_Y - 2.0, 20.5),
-                    (J2_SHAFT_Y - 3.6, 18.8),
-                    (J2_SHAFT_Y - 3.6, POCKET_FLOOR_Z),
-                )
-            make_face()
-        extrude(sk_boot_in.sketch, amount=5.0)
-        #    3) Outer bottom wire exit hole straight out +X outer nose at boot level (X=95.5..100.5, Y_off=+/-4.5, Z=5.5..16.5)
-        #       Keeps entire upper nose (Z=16.5..35.5) & top rim between M3 screws 100% solid; 45-deg roof prints support-free!
-        with BuildSketch(Plane.YZ.offset(95.5)) as sk_outer_wire:
-            with BuildLine():
-                Polyline(
-                    (J2_SHAFT_Y - 4.5, POCKET_FLOOR_Z),
-                    (J2_SHAFT_Y + 4.5, POCKET_FLOOR_Z),
-                    (J2_SHAFT_Y + 4.5, 14.0),
-                    (J2_SHAFT_Y + 2.0, 16.5),
-                    (J2_SHAFT_Y - 2.0, 16.5),
-                    (J2_SHAFT_Y - 4.5, 14.0),
-                    (J2_SHAFT_Y - 4.5, POCKET_FLOOR_Z),
-                )
-            make_face()
-        extrude(sk_outer_wire.sketch, amount=5.0)
+        extrude(sk_boot_slot.sketch, amount=(HOUSING_TOP_Z + 1.0) - POCKET_FLOOR_Z)
+        #    2) Open-top neck cable bay (X=22.6..28.2, Y_off=+/-4.5, Z=5.5..36.5) ahead of crossbar (X=17.5..22.5)
+        with Locations((0.5 * (22.6 + 28.2), J2_SHAFT_Y, 0.5 * (POCKET_FLOOR_Z + HOUSING_TOP_Z + 1.0))):
+            Box(28.2 - 22.6, 9.0, (HOUSING_TOP_Z + 1.0) - POCKET_FLOOR_Z)
 
-        # F. Coaxial M4 pilot bore in Z=0..5.5 bottom bearing bridge at (60.0, 6.60) for 624ZZ (4x13x5)
+        # F. Coaxial M3 pilot bore in Z=0..5.5 bottom bearing bridge at (66.0, 8.75) for 623ZZ (3x10x4)
         with Locations((J2_SHAFT_X, J2_SHAFT_Y, 2.4)):
-            Cylinder(radius=1.70, height=5.0)
+            Cylinder(radius=1.30, height=5.0)
 
     part = part - cuts.part
 
@@ -215,7 +190,7 @@ def place_in_world(link, shaft_z=67.0, angle_deg=0.0):
 
 
 def build_virtual_mg996r2():
-    """Virtual MG996R #2 seated on HOUSING_TOP_Z=35.5 (shaft at -X=60.0, wire boot at +X=90.7..95.7)."""
+    """Virtual MG996R #2 seated on HOUSING_TOP_Z=35.5 (shaft at +X=66.0, wire boot at -X=30.3..35.3)."""
     z0 = HOUSING_TOP_Z - 27.5
     with BuildPart() as m:
         with Locations((J2_BODY_CX, J2_SHAFT_Y, z0 + 27.5 / 2.0)):
@@ -226,6 +201,9 @@ def build_virtual_mg996r2():
             Box(54.0, 19.7, 2.6)
         with Locations((J2_SHAFT_X, J2_SHAFT_Y, HOUSING_TOP_Z + 11.2 + 2.4)):
             Cylinder(radius=2.95, height=4.8)
+        # 5.0 mm wire boot facing -X into cable bay
+        with Locations((J2_BODY_CX - 20.35 - 2.5, J2_SHAFT_Y, z0 + 2.0 + 4.5)):
+            Box(5.0, 6.5, 9.0)
     return m.part
 
 

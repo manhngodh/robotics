@@ -1,33 +1,46 @@
 [
   {
     "id": "join_link",
-    "name": "1. Join Link (MG996R-to-MG996R)",
+    "name": "1. Join Link V6 (MG996R↔MG996R, 56.5mm)",
     "file": "meshes/parts/join_link.stl",
     "color": "#298fd6",
     "dims": [
-      116.5,
-      60.7,
-      35.6
+      100.5,
+      66.0,
+      35.5
     ],
-    "volume_mm3": 67675.0,
-    "note": "PETG · Hốc servo sâu 30.0mm · Trục PIVOT_Z=24.10mm · Khe boot +X"
+    "volume_mm3": 60773.1,
+    "note": "PLA/PETG · Khe càng 56.50mm · Trục +X · Rãnh boot -X"
+  },
+  {
+    "id": "cover_mg90s_2arm",
+    "name": "2. 2-Arm Cover (MG996R→MG90S, 56.5mm)",
+    "file": "meshes/parts/cover_mg90s_2arm.stl",
+    "color": "#2eb885",
+    "dims": [
+      78.5,
+      66.0,
+      26.0
+    ],
+    "volume_mm3": 24126.4,
+    "note": "PLA/PETG · Khe càng 56.50mm · Dài 57.50mm · Ổ bi 623ZZ M3"
   },
   {
     "id": "joint_base",
-    "name": "2. Joint Base V6 (Đế khớp 1)",
+    "name": "3. Joint Base V6 (Đế khớp 1)",
     "file": "meshes/parts/joint_base.stl",
     "color": "#d97324",
     "dims": [
       64.5,
       58.0,
-      68.73
+      68.72
     ],
     "volume_mm3": 65444.9,
-    "note": "PETG · Hốc servo sâu 30.0mm · Ôm MG996R #1 · Spigot ổ bi M3"
+    "note": "PLA/PETG · Hốc servo sâu 30.0mm · Lỗ +X M3 (Ø2.60mm)"
   },
   {
     "id": "base_body",
-    "name": "3. V6 Clamp Body (Thân kẹp bàn)",
+    "name": "4. V6 Clamp Body (Thân kẹp bàn)",
     "file": "meshes/parts/base_body.stl",
     "color": "#e67e22",
     "dims": [
@@ -36,11 +49,11 @@
       103.0
     ],
     "volume_mm3": 201612.7,
-    "note": "PETG · Kẹp mép bàn · Ngàm nối Joint Base"
+    "note": "PLA/PETG · Kẹp mép bàn 10–50mm · Ngàm 4× M4"
   },
   {
     "id": "base_jaw",
-    "name": "4. V6 Clamp Jaw (Má kẹp dưới)",
+    "name": "5. V6 Clamp Jaw (Má kẹp dưới)",
     "file": "meshes/parts/base_jaw.stl",
     "color": "#f59e0b",
     "dims": [
@@ -49,11 +62,11 @@
       74.0
     ],
     "volume_mm3": 38635.7,
-    "note": "PETG · Đệm kẹp bàn chống trượt"
+    "note": "PLA/PETG · Đệm kẹp bàn chống trượt · 2 ty Ø7.7mm"
   },
   {
     "id": "base_screw",
-    "name": "5. V6 Clamp Screw (Vít siết bàn)",
+    "name": "6. V6 Clamp Screw (Vít siết bàn)",
     "file": "meshes/parts/base_screw.stl",
     "color": "#fbbf24",
     "dims": [
@@ -62,11 +75,11 @@
       89.5
     ],
     "volume_mm3": 31001.7,
-    "note": "PETG · Ren M24×3 bước lớn"
+    "note": "PLA/PETG · Ren Tr16×3 (khe hở 0.35mm)"
   },
   {
     "id": "mg996r",
-    "name": "6. Servo MG996R (+5mm Wire Boot)",
+    "name": "7. Servo MG996R (Không boot đáy)",
     "file": "meshes/parts/mg996r.stl",
     "color": "#2a2f38",
     "dims": [
@@ -74,46 +87,85 @@
       19.7,
       43.9
     ],
-    "volume_mm3": 32243.6,
-    "note": "Phần cứng · Mô-men ~10 kg·cm · Trục 25T"
+    "volume_mm3": 31951.1,
+    "note": "Phần cứng · 40.7×19.7×38.7mm · Trục 25T"
   },
   {
     "id": "horn_25t",
-    "name": "7. 25T CNC Round Horn (Ø20)",
+    "name": "8. 25T CNC Round Horn (Ø20)",
     "file": "meshes/parts/horn_25t.stl",
     "color": "#cf2e38",
     "dims": [
       20.0,
-      20.0,
+      19.99,
       6.0
     ],
     "volume_mm3": 884.3,
-    "note": "Nhôm CNC · 4 lỗ M3 trên PCD Ø14.0 mm"
+    "note": "Nhôm CNC · 4 lỗ M3 trên PCD Ø14.0 mm · Dùng vít M3×6"
   },
   {
-    "id": "bearing_624zz",
-    "name": "8. Ổ bi 624ZZ (4×13×5 mm)",
-    "file": "meshes/parts/bearing_624zz.stl",
+    "id": "bearing_623zz",
+    "name": "9. Ổ bi 623ZZ (3×10×4 mm)",
+    "file": "meshes/parts/bearing_623zz.stl",
     "color": "#dbe2ea",
     "dims": [
-      13.0,
-      13.0,
-      5.1
+      10.0,
+      10.0,
+      4.05
     ],
-    "volume_mm3": 572.0,
-    "note": "Thép · ID 4mm · OD 13mm · Dày 5mm"
+    "volume_mm3": 271.6,
+    "note": "Thép · ID 3mm (M3) · OD 10mm · Dày 4mm"
   },
   {
-    "id": "bolt_m4",
-    "name": "9. Vít lục giác M4×12",
-    "file": "meshes/parts/bolt_m4.stl",
+    "id": "bolt_m3",
+    "name": "10. Vít lục giác M3×16",
+    "file": "meshes/parts/bolt_m3.stl",
     "color": "#94a3b8",
     "dims": [
-      7.0,
-      7.0,
-      16.0
+      5.5,
+      5.5,
+      19.0
     ],
-    "volume_mm3": 304.7,
-    "note": "Inox/Thép · Gắn ổ bi 624ZZ giữ càng"
+    "volume_mm3": 184.4,
+    "note": "Inox/Thép · Bắt ổ bi 623ZZ (kèm spacer OD ≤ 5.5mm)"
+  },
+  {
+    "id": "mg90s",
+    "name": "11. Servo MG90S",
+    "file": "meshes/parts/mg90s.stl",
+    "color": "#1d4ed8",
+    "dims": [
+      32.1,
+      12.2,
+      29.0
+    ],
+    "volume_mm3": 6956.1,
+    "note": "Phần cứng · 22.8×12.2×22.8mm · Trục 20T"
+  },
+  {
+    "id": "dc180_housing",
+    "name": "12. DC180 Toolhead Cradle (V3)",
+    "file": "meshes/parts/dc180_housing.stl",
+    "color": "#8b5cf6",
+    "dims": [
+      53.2,
+      34.0,
+      17.5
+    ],
+    "volume_mm3": 0.0,
+    "note": "Đầu công tác · Động cơ DC180 Ø20.4×15.4 + ngàm Tab 4"
+  },
+  {
+    "id": "dc180_cap",
+    "name": "13. DC180 Toolhead Cap (V3)",
+    "file": "meshes/parts/dc180_cap.stl",
+    "color": "#a78bfa",
+    "dims": [
+      39.2,
+      29.4,
+      11.0
+    ],
+    "volume_mm3": 0.0,
+    "note": "Nắp kẹp rãnh trượt DC180 · 4× M3 + tán lục giác chìm"
   }
 ]

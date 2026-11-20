@@ -20,7 +20,7 @@ from build_arm_base_v6 import SHAFT_Z, BODY_CENTER_Z
 from build_mg996r_to_mg996r import (
     place_in_world,
     PIVOT_X, PIVOT_Z,
-    PLUS_Y_IN, HOUSING_TOP_Z,
+    MINUS_Y_IN, PLUS_Y_IN, HOUSING_TOP_Z,
     J2_BODY_CX, J2_SHAFT_X, J2_SHAFT_Y,
 )
 
@@ -48,24 +48,25 @@ def make_detailed_mg996r_local():
         # 25T brass/steel output spline shaft (Ø5.9 x 4.0 mm)
         with Locations((10.35, 0, 38.7 + 1.2 + 2.0)):
             Cylinder(radius=2.95, height=4.0)
-        # Rubber wire boot on -X short face (5.0 x 6.5 x 9.0 mm)
-        with Locations((-20.35 - 2.5, 0, 2.0 + 4.5)):
-            Box(5.0, 6.5, 9.0)
+        # (User MG996R has flush bottom wire without protruding 5 mm rubber boot)
     return servo.part
 
 
-def make_624zz_bearing():
-    """624ZZ ball bearing (ID=4.0, OD=13.0, width=5.0), axis along Z centered at origin."""
+def make_623zz_bearing():
+    """623ZZ ball bearing (ID=3.0, OD=10.0, width=4.0), axis along Z centered at origin."""
     with BuildPart() as b:
-        Cylinder(radius=6.5, height=5.0)
-        Cylinder(radius=2.0, height=5.4, mode=Mode.SUBTRACT)
+        Cylinder(radius=5.0, height=4.0)
+        Cylinder(radius=1.5, height=4.4, mode=Mode.SUBTRACT)
         # Subtle recessed shield groove on both faces so inner/outer races stand out
         for sz in (-1, 1):
-            with Locations((0, 0, sz * 2.35)):
-                Cylinder(radius=5.3, height=0.4, mode=Mode.SUBTRACT)
-            with Locations((0, 0, sz * 2.35)):
-                Cylinder(radius=3.1, height=0.4)
+            with Locations((0, 0, sz * 1.85)):
+                Cylinder(radius=4.0, height=0.35, mode=Mode.SUBTRACT)
+            with Locations((0, 0, sz * 1.85)):
+                Cylinder(radius=2.5, height=0.35)
     return b.part
+
+
+make_624zz_bearing = make_623zz_bearing  # Legacy alias for older callers
 
 
 def make_25t_round_horn():
@@ -85,6 +86,16 @@ def make_25t_round_horn():
             with Locations((7.0 * math.cos(ang), 7.0 * math.sin(ang), 1.25)):
                 Cylinder(radius=1.55, height=3.5, mode=Mode.SUBTRACT)
     return h.part
+
+
+def make_m3_socket_bolt(length=16.0):
+    """M3 socket head cap screw (Ø5.5 x 3.0 head at Z=0..+3, Ø3.0 shank Z=-length..0)."""
+    with BuildPart() as s:
+        with Locations((0, 0, 1.5)):
+            Cylinder(radius=2.75, height=3.0)
+        with Locations((0, 0, -length / 2.0)):
+            Cylinder(radius=1.5, height=length)
+    return s.part
 
 
 def make_m4_socket_bolt(length=14.0):
@@ -120,33 +131,35 @@ def build_and_verify(angle_deg=0.0):
     # Local +x=+10.35 (shaft) -> z_w = +10.35 -> translate(BODY_CENTER_Z=56.65 in Z) puts shaft at Z_w=67.0!
     mg1 = mg_proto.rotate(Axis.Y, -90).translate((9.0, 0.0, BODY_CENTER_Z))
 
-    # 2. 25T CNC Round Horn on -Y arm inner face (X_w = -32.5.. -30.0) engaging spline at (-34.5..-29.7)
+    # 2. 25T CNC Round Horn on -Y arm inner face (X_w = -15.0 + MINUS_Y_IN)
     horn1_loc = make_25t_round_horn()
     # Map local +Z (boss toward servo +X_w) -> Ry(+90) sends +Z -> +X!
-    horn1 = horn1_loc.rotate(Axis.Y, 90).translate((-32.5, 0.0, SHAFT_Z))
+    horn1 = horn1_loc.rotate(Axis.Y, 90).translate((-15.0 + MINUS_Y_IN, 0.0, SHAFT_Z))
     horn1 = horn1.rotate(Axis((-15.0, 0.0, SHAFT_Z), (1, 0, 0)), angle_deg)
 
-    # 3. 624ZZ (4x13x5 mm) Bearing #1 seated in arm_link +Y pocket (X_w = -15.0 + PLUS_Y_IN + 3.5 = +21.2)
-    b624_proto = make_624zz_bearing()
-    b1_x = -15.0 + PLUS_Y_IN + 3.5
-    b1 = b624_proto.rotate(Axis.Y, 90).translate((b1_x, 0.0, SHAFT_Z))
+    # 3. 623ZZ (3x10x4 mm) Bearing #1 seated in arm_link +Y pocket (X_w = -15.0 + PLUS_Y_IN + 3.0 = +25.0)
+    b623_proto = make_623zz_bearing()
+    b1_x = -15.0 + PLUS_Y_IN + 3.0
+    b1 = b623_proto.rotate(Axis.Y, 90).translate((b1_x, 0.0, SHAFT_Z))
     b1 = b1.rotate(Axis((-15.0, 0.0, SHAFT_Z), (1, 0, 0)), angle_deg)
 
-    # 4. M4x12 Bolt clamping Bearing #1 inner race into joint_base rear wall
-    m4_1 = make_m4_socket_bolt(12.0).rotate(Axis.Y, 90).translate((b1_x + 2.5, 0.0, SHAFT_Z))
-    m4_1 = m4_1.rotate(Axis((-15.0, 0.0, SHAFT_Z), (1, 0, 0)), angle_deg)
+    # 4. M3x16 Bolt clamping Bearing #1 inner race into joint_base rear wall
+    m3_1 = make_m3_socket_bolt(16.0).rotate(Axis.Y, 90).translate((b1_x + 2.0, 0.0, SHAFT_Z))
+    m3_1 = m3_1.rotate(Axis((-15.0, 0.0, SHAFT_Z), (1, 0, 0)), angle_deg)
 
-    # 5. MG996R #2 seated in arm_link upper pocket (30 mm deep: HOUSING_TOP_Z=35.5 -> Z_loc=8.0)
-    mg2_loc = mg_proto.rotate(Axis.Z, 180).translate((J2_BODY_CX, J2_SHAFT_Y, HOUSING_TOP_Z - 27.5))
+    # 5. MG996R #2 seated in arm_link upper pocket (30 mm deep: HOUSING_TOP_Z=35.5 -> Z_loc=8.0, shaft at +X)
+    mg2_loc = mg_proto.translate((J2_BODY_CX, J2_SHAFT_Y, HOUSING_TOP_Z - 27.5))
     mg2 = place_in_world(mg2_loc, shaft_z=SHAFT_Z, angle_deg=angle_deg)
 
-    # 6. 25T Horn #2 seated on MG996R #2 output shaft + 624ZZ Bearing #2 below bottom M4 pilot (with 1 mm M4 washer)
-    horn2_loc = make_25t_round_horn().rotate(Axis.X, 180).translate((J2_SHAFT_X, J2_SHAFT_Y, HOUSING_TOP_Z + 13.7))
+    # 6. 25T Horn #2 seated on MG996R #2 output shaft + 623ZZ Bearing #2 aligned with +Y pocket
+    horn2_z = HOUSING_TOP_Z + 13.7
+    b2_z = horn2_z - (PLUS_Y_IN - MINUS_Y_IN) - 3.0
+    horn2_loc = make_25t_round_horn().rotate(Axis.X, 180).translate((J2_SHAFT_X, J2_SHAFT_Y, horn2_z))
     horn2 = place_in_world(horn2_loc, shaft_z=SHAFT_Z, angle_deg=angle_deg)
-    b2_loc = b624_proto.translate((J2_SHAFT_X, J2_SHAFT_Y, -4.5))  # 1 mm washer gap Z=-1..0, bearing Z=-7..-2
+    b2_loc = b623_proto.translate((J2_SHAFT_X, J2_SHAFT_Y, b2_z))
     b2 = place_in_world(b2_loc, shaft_z=SHAFT_Z, angle_deg=angle_deg)
-    m4_2_loc = make_m4_socket_bolt(12.0).rotate(Axis.X, 180).translate((J2_SHAFT_X, J2_SHAFT_Y, -7.0))
-    m4_2 = place_in_world(m4_2_loc, shaft_z=SHAFT_Z, angle_deg=angle_deg)
+    m3_2_loc = make_m3_socket_bolt(18.0).rotate(Axis.X, 180).translate((J2_SHAFT_X, J2_SHAFT_Y, b2_z - 2.0))
+    m3_2 = place_in_world(m3_2_loc, shaft_z=SHAFT_Z, angle_deg=angle_deg)
 
     return {
         "joint_base": joint_base,
@@ -154,11 +167,11 @@ def build_and_verify(angle_deg=0.0):
         "mg1": mg1,
         "horn1": horn1,
         "b1": b1,
-        "m4_1": m4_1,
+        "m4_1": m3_1,
         "mg2": mg2,
         "horn2": horn2,
         "b2": b2,
-        "m4_2": m4_2,
+        "m4_2": m3_2,
     }
 
 

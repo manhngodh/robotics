@@ -17,15 +17,15 @@ from build_arm_base_v6 import SHAFT_Z
 from build_mg996r_to_mg996r import (
     place_in_world,
     PIVOT_X, PIVOT_Z,
-    MINUS_Y_IN, HOUSING_TOP_Z,
+    MINUS_Y_IN, PLUS_Y_IN, HOUSING_TOP_Z,
     J2_BODY_CX, J2_SHAFT_X, J2_SHAFT_Y,
 )
 from assemble_joint1_demo import (
     build_and_verify,
     make_detailed_mg996r_local,
-    make_624zz_bearing,
+    make_623zz_bearing,
     make_25t_round_horn,
-    make_m4_socket_bolt,
+    make_m3_socket_bolt,
     part_to_tris,
 )
 
@@ -48,7 +48,7 @@ def main():
     parts = build_and_verify(angle_deg=ang1)
     link_proto = import_step(os.path.join(DIR, "arm_link_mg996r_to_mg996r.step"))
     mg_proto = make_detailed_mg996r_local()
-    b624_proto = make_624zz_bearing()
+    b623_proto = make_623zz_bearing()
     horn_proto = make_25t_round_horn()
 
     # Sweep Join #2 across Joint 2 angles [0, +/-45, +/-90, +/-105 deg] to verify full range!
@@ -65,17 +65,19 @@ def main():
     link2_loc = place_on_joint2_local(link_proto, ang2_deg=ang2)
     link2_w = place_in_world(link2_loc, shaft_z=SHAFT_Z, angle_deg=ang1)
 
-    # MG996R #3 inside Link #2's upper pocket (30 mm deep: HOUSING_TOP_Z=35.5 -> Z_loc=8.0)
-    mg3_on_l2 = mg_proto.rotate(Axis.Z, 180).translate((J2_BODY_CX, J2_SHAFT_Y, HOUSING_TOP_Z - 27.5))
+    # MG996R #3 inside Link #2's upper pocket (30 mm deep: HOUSING_TOP_Z=35.5 -> Z_loc=8.0, shaft at +X)
+    mg3_on_l2 = mg_proto.translate((J2_BODY_CX, J2_SHAFT_Y, HOUSING_TOP_Z - 27.5))
     mg3_w = place_in_world(place_on_joint2_local(mg3_on_l2, ang2_deg=ang2), shaft_z=SHAFT_Z, angle_deg=ang1)
 
-    # 25T Horn #3 + 624ZZ Bearing #3 + M4 Bolt #3 on Joint 3
-    horn3_on_l2 = horn_proto.rotate(Axis.X, 180).translate((J2_SHAFT_X, J2_SHAFT_Y, HOUSING_TOP_Z + 13.7))
+    # 25T Horn #3 + 623ZZ Bearing #3 + M3 Bolt #3 on Joint 3
+    horn3_z = HOUSING_TOP_Z + 13.7
+    b3_z = horn3_z - (PLUS_Y_IN - MINUS_Y_IN) - 3.0
+    horn3_on_l2 = horn_proto.rotate(Axis.X, 180).translate((J2_SHAFT_X, J2_SHAFT_Y, horn3_z))
     horn3_w = place_in_world(place_on_joint2_local(horn3_on_l2, ang2_deg=ang2), shaft_z=SHAFT_Z, angle_deg=ang1)
-    b3_on_l2 = b624_proto.translate((J2_SHAFT_X, J2_SHAFT_Y, -4.5))
+    b3_on_l2 = b623_proto.translate((J2_SHAFT_X, J2_SHAFT_Y, b3_z))
     b3_w = place_in_world(place_on_joint2_local(b3_on_l2, ang2_deg=ang2), shaft_z=SHAFT_Z, angle_deg=ang1)
-    m4_3_on_l2 = make_m4_socket_bolt(12.0).rotate(Axis.X, 180).translate((J2_SHAFT_X, J2_SHAFT_Y, -7.0))
-    m4_3_w = place_in_world(place_on_joint2_local(m4_3_on_l2, ang2_deg=ang2), shaft_z=SHAFT_Z, angle_deg=ang1)
+    m3_3_on_l2 = make_m3_socket_bolt(18.0).rotate(Axis.X, 180).translate((J2_SHAFT_X, J2_SHAFT_Y, b3_z - 2.0))
+    m3_3_w = place_in_world(place_on_joint2_local(m3_3_on_l2, ang2_deg=ang2), shaft_z=SHAFT_Z, angle_deg=ang1)
 
     parts_2j = dict(parts)
     parts_2j.update({
@@ -83,7 +85,7 @@ def main():
         "mg3": mg3_w,
         "horn3": horn3_w,
         "b3": b3_w,
-        "m4_3": m4_3_w,
+        "m4_3": m3_3_w,
     })
 
     # Interference summary

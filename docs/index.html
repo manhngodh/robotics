@@ -108,12 +108,12 @@
   <div id="labels-layer"></div>
 
   <div id="hud">
-    <h1>MG996R 2-Joint Robot Arm</h1>
-    <div class="sub">1 Joint Base + 2 Join Links · Bộ kẹp bàn V6 · 3× MG996R · 624ZZ &amp; 25T Horn</div>
+    <h1>MStation Robot Arm V6</h1>
+    <div class="sub">1 Joint Base + 2 Join Links + 2-Arm MG996R→MG90S · Khe càng 56.5mm · 623ZZ (M3) &amp; 25T Horn</div>
 
     <div class="mode-tabs">
-      <button class="mode-tab active" id="tab-parts">Xem từng Part (9)</button>
-      <button class="mode-tab" id="tab-asm">Lắp ráp 2 Khớp</button>
+      <button class="mode-tab active" id="tab-parts">Xem từng Part (13)</button>
+      <button class="mode-tab" id="tab-asm">Lắp ráp 3 Khớp</button>
     </div>
 
     <!-- MEASUREMENT TOOLS (AVAILABLE IN BOTH MODES) -->
@@ -185,6 +185,10 @@
           <input type="range" id="j2-slider" min="-105" max="105" value="0" step="1" />
         </div>
         <div class="slider-row">
+          <div class="slider-head"><span>Joint 3 (Wrist MG90S)</span><span class="val" id="j3-val">0°</span></div>
+          <input type="range" id="j3-slider" min="-105" max="105" value="0" step="1" />
+        </div>
+        <div class="slider-row">
           <div class="slider-head"><span>Tách bung (Explode)</span><span class="val" id="exp-val">0%</span></div>
           <input type="range" id="exp-slider" min="0" max="100" value="0" step="1" />
         </div>
@@ -207,12 +211,13 @@
 
       <div class="section">
         <div class="section-title">Hiển thị chi tiết</div>
-        <label class="check-row"><input type="checkbox" checked data-layer="base"><span class="swatch" style="background:#d97324"></span>Joint Base (PETG)</label>
-        <label class="check-row"><input type="checkbox" checked data-layer="link1"><span class="swatch" style="background:#298fd6"></span>Join #1 (MG996R-to-MG996R)</label>
-        <label class="check-row"><input type="checkbox" checked data-layer="link2"><span class="swatch" style="background:#2eb885"></span>Join #2 (MG996R-to-MG996R)</label>
-        <label class="check-row"><input type="checkbox" checked data-layer="servos"><span class="swatch" style="background:#333942"></span>3× Servo MG996R (+5mm boot)</label>
+        <label class="check-row"><input type="checkbox" checked data-layer="base"><span class="swatch" style="background:#d97324"></span>Joint Base V6 (M3 Ø2.6)</label>
+        <label class="check-row"><input type="checkbox" checked data-layer="link1"><span class="swatch" style="background:#298fd6"></span>Join #1 (56.5mm / 72mm)</label>
+        <label class="check-row"><input type="checkbox" checked data-layer="link2"><span class="swatch" style="background:#2eb885"></span>Join #2 (56.5mm / 72mm)</label>
+        <label class="check-row"><input type="checkbox" checked data-layer="link3"><span class="swatch" style="background:#14b8a6"></span>Cover 2-Arm (96R→90S · 57.5mm)</label>
+        <label class="check-row"><input type="checkbox" checked data-layer="servos"><span class="swatch" style="background:#333942"></span>3× Servo MG996R</label>
         <label class="check-row"><input type="checkbox" checked data-layer="horns"><span class="swatch" style="background:#cf2e38"></span>3× 25T CNC Horn (Ø20)</label>
-        <label class="check-row"><input type="checkbox" checked data-layer="bearings"><span class="swatch" style="background:#cbd5e1"></span>3× Ổ bi 624ZZ (4×13×5) &amp; Vít M4</label>
+        <label class="check-row"><input type="checkbox" checked data-layer="bearings"><span class="swatch" style="background:#cbd5e1"></span>3× Ổ bi 623ZZ (3×10×4) &amp; Vít M3</label>
       </div>
     </div>
   </div>
@@ -267,7 +272,10 @@
     const j1Group = new THREE.Group();
     j1Group.position.set(-15.0, 0.0, 67.0);
     const j2Group = new THREE.Group();
-    j2Group.position.set(7.60, 0.0, 66.0);
+    j2Group.position.set(8.75, 0.0, 72.0);
+    const j3Group = new THREE.Group();
+    j3Group.position.set(0.0, -3.15, 72.0);
+    j2Group.add(j3Group);
     j1Group.add(j2Group);
     asmRoot.add(j1Group);
     scene.add(asmRoot);
@@ -276,12 +284,13 @@
       base: new THREE.MeshStandardMaterial({ color: 0xd97324, roughness: 0.42, metalness: 0.08 }),
       link1: new THREE.MeshStandardMaterial({ color: 0x298fd6, roughness: 0.38, metalness: 0.08 }),
       link2: new THREE.MeshStandardMaterial({ color: 0x2eb885, roughness: 0.38, metalness: 0.08 }),
+      link3: new THREE.MeshStandardMaterial({ color: 0x14b8a6, roughness: 0.38, metalness: 0.08 }),
       servos: new THREE.MeshStandardMaterial({ color: 0x2a2f38, roughness: 0.55, metalness: 0.12 }),
       horns: new THREE.MeshStandardMaterial({ color: 0xcf2e38, roughness: 0.25, metalness: 0.72 }),
       bearings: new THREE.MeshStandardMaterial({ color: 0xdbe2ea, roughness: 0.2, metalness: 0.85 }),
     };
 
-    const layers = { base: [], link1: [], link2: [], servos: [], horns: [], bearings: [] };
+    const layers = { base: [], link1: [], link2: [], link3: [], servos: [], horns: [], bearings: [] };
     const meshRefs = {};
     const specs = [
       ['joint_base', 'meshes/joint_base.stl', asmRoot, 'base'],
@@ -299,6 +308,7 @@
       ['horn3', 'meshes/horn3.stl', j2Group, 'horns'],
       ['b3', 'meshes/b3.stl', j2Group, 'bearings'],
       ['m4_3', 'meshes/m4_3.stl', j2Group, 'bearings'],
+      ['link3', 'meshes/link3_mg90s.stl', j3Group, 'link3'],
     ];
 
     const loader = new STLLoader();
@@ -393,7 +403,7 @@
         if (currentPartMesh) {
           partGroup.remove(currentPartMesh);
         }
-        const isMetal = ['horn_25t', 'bearing_624zz', 'bolt_m4'].includes(item.id);
+        const isMetal = ['horn_25t', 'bearing_623zz', 'bolt_m3'].includes(item.id);
         const mat = new THREE.MeshStandardMaterial({
           color: new THREE.Color(item.color),
           roughness: isMetal ? 0.24 : (item.id === 'mg996r' ? 0.55 : 0.36),
@@ -879,10 +889,10 @@
     // 4. MODE SWITCHING
     // ========================
     const camPresets = {
-      iso:   [[170, -185, 195], [-10, 0, 125]],
-      front: [[-10, -260, 125], [-10, 0, 125]],
-      side:  [[250, 0, 125], [-10, 0, 125]],
-      top:   [[-10, -1, 340], [-10, 0, 125]],
+      iso:   [[195, -210, 225], [-8, 0, 145]],
+      front: [[-8, -295, 145], [-8, 0, 145]],
+      side:  [[285, 0, 145], [-8, 0, 145]],
+      top:   [[-8, -1, 390], [-8, 0, 145]],
     };
 
     function setMode(mode) {
@@ -941,19 +951,24 @@
     // ========================
     const j1Slider = document.getElementById('j1-slider');
     const j2Slider = document.getElementById('j2-slider');
+    const j3Slider = document.getElementById('j3-slider');
     const expSlider = document.getElementById('exp-slider');
     const j1Val = document.getElementById('j1-val');
     const j2Val = document.getElementById('j2-val');
+    const j3Val = document.getElementById('j3-val');
     const expVal = document.getElementById('exp-val');
 
     function applyAssemblyState() {
       const a1 = Number(j1Slider.value);
       const a2 = Number(j2Slider.value);
+      const a3 = Number(j3Slider.value);
       const e = Number(expSlider.value) / 100.0;
       j1Group.rotation.x = THREE.MathUtils.degToRad(a1);
       j2Group.rotation.y = THREE.MathUtils.degToRad(a2);
+      j3Group.rotation.x = THREE.MathUtils.degToRad(a3);
       j1Group.position.set(-15.0, 0.0, 67.0 + 48.0 * e);
-      j2Group.position.set(7.60, 0.0, 66.0 + 58.0 * e);
+      j2Group.position.set(8.75, 0.0, 72.0 + 58.0 * e);
+      j3Group.position.set(0.0, -3.15, 72.0 + 55.0 * e);
 
       if (meshRefs.mg1)   meshRefs.mg1.position.set(36.0 * e, 0, 0);
       if (meshRefs.horn1) meshRefs.horn1.position.set(-28.0 * e, 0, 0);
@@ -970,12 +985,14 @@
 
       j1Val.textContent = `${a1}°`;
       j2Val.textContent = `${a2}°`;
+      j3Val.textContent = `${a3}°`;
       expVal.textContent = `${Math.round(e * 100)}%`;
       if (showBBox) refreshBBoxOverlay();
     }
 
     j1Slider.addEventListener('input', () => { autoDemo = false; demoBtn.classList.remove('active'); applyAssemblyState(); });
     j2Slider.addEventListener('input', () => { autoDemo = false; demoBtn.classList.remove('active'); applyAssemblyState(); });
+    j3Slider.addEventListener('input', () => { autoDemo = false; demoBtn.classList.remove('active'); applyAssemblyState(); });
     expSlider.addEventListener('input', applyAssemblyState);
 
     let autoDemo = false;
@@ -987,14 +1004,14 @@
     });
     document.getElementById('btn-reset').addEventListener('click', () => {
       autoDemo = false; demoBtn.classList.remove('active');
-      j1Slider.value = 0; j2Slider.value = 0; expSlider.value = 0;
+      j1Slider.value = 0; j2Slider.value = 0; j3Slider.value = 0; expSlider.value = 0;
       applyAssemblyState();
     });
     const xrayBtn = document.getElementById('btn-xray');
     xrayBtn.addEventListener('click', () => {
       xray = !xray;
       xrayBtn.classList.toggle('active', xray);
-      ['base', 'link1', 'link2'].forEach((k) => {
+      ['base', 'link1', 'link2', 'link3'].forEach((k) => {
         materials[k].transparent = xray;
         materials[k].opacity = xray ? 0.42 : 1.0;
         materials[k].depthWrite = !xray;
@@ -1047,6 +1064,7 @@
         const t = (now - t0) * 0.0012;
         j1Slider.value = Math.round(45 * Math.sin(t));
         j2Slider.value = Math.round(65 * Math.sin(t * 1.35));
+        j3Slider.value = Math.round(55 * Math.sin(t * 1.7));
         applyAssemblyState();
       } else if (activeMode === 'parts' && spinPart && !measureActive) {
         partGroup.rotation.z += dt * 0.65;
