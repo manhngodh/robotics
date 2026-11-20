@@ -311,10 +311,11 @@
       ['link3', 'meshes/link3_mg90s.stl', j3Group, 'link3'],
     ];
 
+    const CACHE_V = '20261120_p02';
     const loader = new STLLoader();
     let asmLoaded = 0;
     specs.forEach(([id, url, parent, key]) => {
-      loader.load(url, (geom) => {
+      loader.load(`${url}?v=${CACHE_V}`, (geom) => {
         geom.computeVertexNormals();
         const mesh = new THREE.Mesh(geom, materials[key]);
         mesh.castShadow = true;
@@ -432,7 +433,7 @@
         renderGeom(partGeoms[item.id]);
       } else {
         statusEl.textContent = `Đang tải ${item.name}...`;
-        loader.load(item.file, (geom) => {
+        loader.load(`${item.file}?v=${CACHE_V}`, (geom) => {
           geom.computeVertexNormals();
           partGeoms[item.id] = geom;
           if (catalog[currentPartIdx].id === item.id) {
@@ -442,7 +443,7 @@
       }
     }
 
-    fetch('parts_catalog.json')
+    fetch(`parts_catalog.json?v=${CACHE_V}`)
       .then((r) => r.json())
       .then((data) => {
         catalog = data;
