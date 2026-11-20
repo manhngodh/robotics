@@ -138,9 +138,17 @@ def build_clamp_body():
         with Locations((0.5 * (BACK_X_OUTER + JAW_X_FRONT), 0, 0.5 * (LOWER_JAW_Z_BOT + LOWER_JAW_Z_TOP))):
             Box(JAW_X_FRONT - BACK_X_OUTER, FRAME_HALF_W * 2, LOWER_JAW_T)
 
-        gusset_sz = 12.0
-        with Locations((BACK_X_INNER + gusset_sz / 2.0, 0, LOWER_JAW_Z_TOP + gusset_sz / 2.0)):
-            Wedge(gusset_sz, 20.0, gusset_sz, 0, 0, 0, 0)
+        gusset_sz = 8.0
+        with BuildSketch(Plane.XZ) as sk_gusset:
+            with BuildLine():
+                Polyline(
+                    (BACK_X_INNER - 0.5, LOWER_JAW_Z_TOP - 0.5),
+                    (BACK_X_INNER + gusset_sz, LOWER_JAW_Z_TOP - 0.5),
+                    (BACK_X_INNER - 0.5, LOWER_JAW_Z_TOP + gusset_sz),
+                    (BACK_X_INNER - 0.5, LOWER_JAW_Z_TOP - 0.5),
+                )
+            make_face()
+        extrude(sk_gusset.sketch, amount=FRAME_HALF_W, both=True)
 
         with Locations((0.5 * (KEY_X_MIN + KEY_X_MAX), 0, DECK_Z_TOP - KEY_DEPTH / 2.0)):
             Box(KEY_X_MAX - KEY_X_MIN, KEY_HALF_W * 2, KEY_DEPTH, mode=Mode.SUBTRACT)
