@@ -72,10 +72,10 @@
     "dims": [
       75.7,
       41.4,
-      16.0
+      18.0
     ],
-    "volume_mm3": 20112.6,
-    "note": "PLA/PETG · Núm vặn đầu lục giác 13.3mm + Tán dự phòng M8×1.25"
+    "volume_mm3": 23158.4,
+    "note": "PLA/PETG · Núm ren kín M8×1.25 + 2× vít hãm M3 & Tán dự phòng M8"
   },
   {
     "id": "mg996r",

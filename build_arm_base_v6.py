@@ -306,10 +306,11 @@ def build_moving_jaw(z_top=-SAMPLE_DESK_T):
 
 
 def build_m8_knob():
-    """Press-fit ergonomic Ø42 x 16 mm hand knob for an M8 (13 mm hex head) steel bolt."""
-    knob_h = 16.0
+    """Threaded M8x1.25 blind knob (Ø42 x 18 mm, 3 mm closed bottom) + 2x radial Ø2.6mm M3 set-screw locks for headless M8 rod."""
+    knob_h = 18.0
     knob_r = 21.0
-    hex_depth = 8.0
+    floor_h = 3.0
+    thread_h = knob_h - floor_h  # 15.0 mm (12 M8 threads!)
     with BuildPart() as p:
         with Locations((0, 0, knob_h / 2.0)):
             Cylinder(radius=knob_r, height=knob_h)
@@ -317,10 +318,18 @@ def build_m8_knob():
                 ang = k * 45.0
                 with Locations((knob_r * math.cos(math.radians(ang)), knob_r * math.sin(math.radians(ang)), 0)):
                     Cylinder(radius=3.5, height=knob_h + 1.0, mode=Mode.SUBTRACT)
-        with BuildSketch(Plane.XY.offset(knob_h - hex_depth)) as sk_head:
-            RegularPolygon(radius=M8_HEX_R, side_count=6, rotation=30)
-        extrude(sk_head.sketch, amount=hex_depth + 1.0, mode=Mode.SUBTRACT)
-    return p.part
+        # M8x1.25 minor bore + chamfered lead-in at top Z=16.5..18.0
+        with Locations((0, 0, floor_h + thread_h / 2.0)):
+            Cylinder(radius=M8_MINOR_R_NUT, height=thread_h + 1.0, mode=Mode.SUBTRACT)
+        with Locations((0, 0, knob_h - 0.75)):
+            Cone(bottom_radius=M8_MINOR_R_NUT, top_radius=4.8, height=1.5, mode=Mode.SUBTRACT)
+    # Radial Ø2.60 mm M3 lock bore + Ø6.2mm counterbore pockets (outside BuildPart context!)
+    z_m3 = floor_h + thread_h * 0.5
+    p_m3 = Pos(0, 0, z_m3) * Rot(0, 0, 22.5) * Rot(0, 90, 0) * Cylinder(radius=1.30, height=knob_r * 2 + 2.0)
+    cb_1 = Pos(0, 0, z_m3) * Rot(0, 0, 22.5) * Pos(19.25, 0, 0) * Rot(0, 90, 0) * Cylinder(radius=3.10, height=5.5)
+    cb_2 = Pos(0, 0, z_m3) * Rot(0, 0, 202.5) * Pos(19.25, 0, 0) * Rot(0, 90, 0) * Cylinder(radius=3.10, height=5.5)
+    thread_cutter = Pos(0, 0, floor_h) * make_trap_thread_cutter(M8_MAJOR_R_NUT, M8_MINOR_R_NUT, M8_PITCH, thread_h)
+    return p.part - (thread_cutter + p_m3 + cb_1 + cb_2)
 
 
 def build_m8_backup_nut():
@@ -345,18 +354,13 @@ def build_m8_backup_nut():
 
 
 def build_sample_m8_bolt(z_jaw_top=-SAMPLE_DESK_T):
-    """Reference M8 x 120 mm steel hex bolt + knob position when clamped on 13 mm desk."""
-    z_tip = z_jaw_top - MJ_T + 5.5  # seats cleanly inside Jaw Ø8.8 x 6 mm pocket
-    bolt_len = 120.0
-    head_h = 5.3
+    """Reference M8 x 120 mm headless threaded rod (ty ren M8) seated from Jaw pocket down into M8 Knob."""
+    z_tip = z_jaw_top - MJ_T + 5.5  # seats cleanly inside Jaw Ø8.8 x 6 mm pocket (-21.5)
+    bolt_len = 120.0                # spans -141.5 .. -21.5
     z_shaft_bot = z_tip - bolt_len
     with BuildPart() as p:
         with Locations((SCREW_X, 0, 0.5 * (z_shaft_bot + z_tip))):
             Cylinder(radius=4.0, height=bolt_len)
-        with BuildSketch(Plane.XY.offset(z_shaft_bot - head_h)) as sk_h:
-            with Locations((SCREW_X, 0)):
-                RegularPolygon(radius=13.0 / math.sqrt(3.0), side_count=6, rotation=30)
-        extrude(sk_h.sketch, amount=head_h)
     return p.part
 
 
