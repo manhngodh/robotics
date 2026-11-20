@@ -12,9 +12,10 @@ Parametric Python (`build123d`) CAD models, printable `.stl` / `.step` parts, ha
 - [PrintReady_MG996R_to_MG996R.stl](PrintReady_MG996R_to_MG996R.stl) — Monolithic MG996R-to-MG996R link (`100.50 × 66.00 × 35.50 mm`, `72.00 mm` J1→J2, `56.50 mm` yoke gap, `623ZZ` `3×10×4` M3, `30.00 mm` pocket depth, shaft `+X`, through-height `-X` boot slot, `0.000 mm³` clash across `±105°`)
 - [PrintReady_MG996R_to_MG90S_2Arm.stl](PrintReady_MG996R_to_MG90S_2Arm.stl) — Compact 2-Arm MG996R-to-MG90S cover (`78.50 × 66.00 × 26.00 mm`, `57.50 mm` link length, `56.50 mm` yoke gap, `623ZZ` M3, `≤45°` bottom bevel, `0.000 mm³` clash across `±105°`)
 - [PrintReady_V6_Joint.stl](PrintReady_V6_Joint.stl) — V6 Base-to-MG996R Joint Pylon (`30.00 mm` pocket depth, `+X` M3 `Ø2.60 mm` spigot)
-- [PrintReady_V6_Body.stl](PrintReady_V6_Body.stl) — V6 Desk Clamp Body
-- [PrintReady_V6_Jaw.stl](PrintReady_V6_Jaw.stl) — V6 Moving Clamp Jaw
-- [PrintReady_V6_Screw.stl](PrintReady_V6_Screw.stl) — V6 Trapezoidal Clamp Screw
+- [PrintReady_V6_Body.stl](PrintReady_V6_Body.stl) — V6 Desk Clamp Body (`M8` captive hex nut trap `13.3 mm AF` + `Ø8.6 mm` bore)
+- [PrintReady_V6_Jaw.stl](PrintReady_V6_Jaw.stl) — V6 Moving Clamp Jaw (rod-free solid block, `Ø8.8 mm` M8 tip seat)
+- [PrintReady_V6_M8_Knob.stl](PrintReady_V6_M8_Knob.stl) — V6 Press-Fit Thumb Knob for `M8 × 120 mm` hex bolt
+- [PrintReady_V6_M8_Nut.stl](PrintReady_V6_M8_Nut.stl) — V6 Printable Backup `M8×1.25` Flanged Hex Nut (`13.0 mm AF`)
 - [PrintPlate_V6_BaseAndJoint.stl](PrintPlate_V6_BaseAndJoint.stl) — Combined V6 Base + Joint Print Plate
 - [arm_2joints_full_hardware_assembly.stl](arm_2joints_full_hardware_assembly.stl) — Full 2-Joint Assembly with 3× MG996R, 3× 623ZZ (`3×10×4 mm`), 3× 25T CNC Horns & M3 bolts
 

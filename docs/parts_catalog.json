@@ -48,8 +48,8 @@
       60.5,
       103.0
     ],
-    "volume_mm3": 203607.8,
-    "note": "PLA/PETG · Kẹp mép bàn 10–50mm · Ngàm 4× M4 · Đế dưới nguyên khối"
+    "volume_mm3": 205182.4,
+    "note": "PLA/PETG · Kẹp mép bàn 10–50mm · Ngàm 4× M4 · Hốc gài tán M8 (13.3mm)"
   },
   {
     "id": "base_jaw",
@@ -61,21 +61,21 @@
       52.0,
       14.0
     ],
-    "volume_mm3": 33109.4,
-    "note": "PLA/PETG · Đệm kẹp bàn chống trượt · Khối đặc không ty · Xoay tự hãm ±3.3°"
+    "volume_mm3": 33650.7,
+    "note": "PLA/PETG · Đệm kẹp bàn chống trượt · Hốc đầu vít M8 (Ø8.8mm)"
   },
   {
     "id": "base_screw",
-    "name": "6. V6 Clamp Screw (Vít siết bàn)",
+    "name": "6. V6 M8 Knob & Nut (Núm + Tán M8×120)",
     "file": "meshes/parts/base_screw.stl",
     "color": "#fbbf24",
     "dims": [
-      41.42,
-      41.42,
-      89.5
+      75.7,
+      41.4,
+      16.0
     ],
-    "volume_mm3": 31001.7,
-    "note": "PLA/PETG · Ren Tr16×3 (khe hở 0.35mm)"
+    "volume_mm3": 20112.6,
+    "note": "PLA/PETG · Núm vặn đầu lục giác 13.3mm + Tán dự phòng M8×1.25"
   },
   {
     "id": "mg996r",

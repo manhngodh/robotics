@@ -35,7 +35,7 @@ For 3D printer operations (Creality SPARKX i7, Klipper/Moonraker, CFS-Nano slots
 | **MG996R 2-Arm Yoke Gap** | **`56.50 mm` nominal (`≥ 56.0 mm` hard minimum)** | `MINUS_Y_IN = -19.50`, `PLUS_Y_IN = +37.00`; symmetric centerline `J2_SHAFT_Y = +8.75 mm`. Accommodates real MG996R + 25T CNC horn + M3 spacer with print tolerance. |
 | **Horn Side (`-Y` Arm)** | `4.5 mm` thick (`Y=[-24.0, -19.5]`), `Ø21 mm` lug (`R=10.5`), `Ø6.2` center + `4× Ø2.20 mm` on `Ø14.0 PCD` (`45°` phase) + `Ø4.6×1.5 mm` outer counterbore | Matches **25T Round Plastic Horn (`Ø20 mm`)** & included M2/self-tapping servo box screws (`3.0 mm` web under screw head so short screws reach cleanly into plastic horn). |
 | **Bearing Side (`+Y` Arm)** | `5.0 mm` thick (`Y=[+37.0, +42.0]`), `Ø20 mm` lug (`R=10.0`), `1.0 mm` inner lip `Ø7.0 mm` + `4.0 mm` pocket **`Ø10.25 mm`** | Press/slip fit for **`623ZZ` (`3 × 10 × 4 mm`)**. **MUST pair with M3 hardware** (`Ø2.60 mm` M3 pilot bore on mating boss/base & **`OD ≤ 5.5 mm` M3 spacer** so bearing shield is never pinched!). |
-| **Base Desk Clamp (`V6`)** | `10–50 mm` desk opening, `Tr16 × 3` leadscrew (`0.35 mm` radial clearance), `4× M4` deck bolts + `3 mm` shear key | Paired solid `V6 Body` + rod-free `V6 Jaw` (`Ø14.70` swivel, `±3.3°` self-stop) + `V6 Screw` + `V6 Joint Pylon`. |
+| **Base Desk Clamp (`V6`)** | `10–50 mm` desk opening, **`M8 × 120 mm` steel bolt** (`Ø8.6 mm` bore + `13.3 mm` AF × `7.5 mm` captive nut trap), `4× M4` deck bolts + `3 mm` shear key | Paired solid `V6 Body` + rod-free `V6 Jaw` (`Ø8.80 mm` M8 seat, `±3.3°` self-stop) + `V6 M8 Knob & Backup Nut` + `V6 Joint Pylon`. |
 
 ---
 
@@ -60,7 +60,7 @@ For 3D printer operations (Creality SPARKX i7, Klipper/Moonraker, CFS-Nano slots
 
 | Role | Script | Print-Ready STL | Status / Notes |
 | :--- | :--- | :--- | :--- |
-| **Desk Clamp + J1 Pylon** | [build_arm_base_v6.py](./build_arm_base_v6.py) | `PrintReady_V6_Body/Jaw/Screw/Joint.stl` | ✅ `30.00 mm` pocket depth, `+X` boss **`Ø2.60 mm` (M3)** synced with `623ZZ (3×10×4 mm)`. Note: use `4× M4×16` deck bolts. |
+| **Desk Clamp + J1 Pylon** | [build_arm_base_v6.py](./build_arm_base_v6.py) | `PrintReady_V6_Body/Jaw/M8_Knob/M8_Nut/Joint.stl` | ✅ `30.00 mm` pocket depth, `+X` boss **`Ø2.60 mm` (M3)** synced with `623ZZ (3×10×4 mm)`, native `M8 × 120 mm` bolt clamp + captive hex nut trap. Note: use `4× M4×16` deck bolts. |
 | **MG996R ↔ MG996R Link** | [build_mg996r_to_mg996r.py](./build_mg996r_to_mg996r.py) | [PrintReady_MG996R_to_MG996R.stl](./PrintReady_MG996R_to_MG996R.stl) | ✅ `56.50 mm` yoke gap, `72.00 mm` link, `623ZZ (3×10×4)` + M3 underside bore (`Ø2.60 mm`), shaft `+X`, **V6-style `-Y/+X` wire bay (`Z=5.5..22.5`)**, `BRIDGE_X_MIN=17.5`, `0.000 mm³` sweeps. |
 | **MG996R → MG90S (2-Arm)** | [build_mg996r_to_mg90s_2arm.py](./build_mg996r_to_mg90s_2arm.py) | [PrintReady_MG996R_to_MG90S_2Arm.stl](./PrintReady_MG996R_to_MG90S_2Arm.stl) | ✅ `56.50 mm` yoke gap, `57.50 mm` link, `623ZZ (3×10×4)` M3 bearing pocket, `≤ 45°` bottom bevel (`-2.0, 0.0`), `0.000 mm³` sweeps on J1 & J2. |
 | **DC180 Toolhead V3** | [build_segment_dc180_v3.py](./build_segment_dc180_v3.py) | [PrintReady_DC180_Housing.stl](./PrintReady_DC180_Housing.stl), [PrintReady_DC180_Cap.stl](./PrintReady_DC180_Cap.stl) | ✅ `Ø20.4×15.4` flat-oval motor cradle + interlocking rail cap + `Tab 4` U-fork. |

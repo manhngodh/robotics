@@ -87,27 +87,23 @@ MG996R_SCREW_Z_OFF = 24.5   # 49.0 mm longitudinal pitch -> Z = 61.15 & 110.15 m
 MG996R_SCREW_Y_OFF = 5.0    # 10.0 mm transverse pitch -> Y = +/-5.0 mm
 MG996R_PILOT_R = 1.20       # Ø2.4 mm pilot bore (16 mm deep) for M3 / heavy servo mounting screws
 
-# Screw & Guide Rods (GUIDE placed so rods never collide with Ø42 knob at any desk 10-50 mm)
+# M8 x 120 mm Steel Clamp Bolt + Captive Hex Nut Pocket + Printable Backup Nut & Knob
 SCREW_X = -6.0
-GUIDE_X = -25.0
-GUIDE_Y = 19.0
-GUIDE_ROD_R = 3.85
-GUIDE_BORE_R = 4.2
+M8_BORE_R = 4.30            # Ø8.60 mm clearance bore for M8 (Ø8.0) steel bolt
+M8_HEX_AF = 13.30           # 13.0 mm AF DIN 934 M8 nut/head + 0.15 mm/side print clearance
+M8_HEX_R = M8_HEX_AF / math.sqrt(3.0)  # circumradius = 7.679 mm
+M8_NUT_POCKET_D = 7.5       # Captive M8 hex pocket depth in top of LOWER_JAW (supports 6.8 mm steel nut or backup nut)
 
-THREAD_PITCH = 3.0
-THREAD_MAJOR_R_NUT = 8.4
-THREAD_MINOR_R_NUT = 6.9
-THREAD_CLEARANCE = 0.35
-THREAD_MAJOR_R_SCREW = THREAD_MAJOR_R_NUT - THREAD_CLEARANCE
-THREAD_MINOR_R_SCREW = THREAD_MINOR_R_NUT - THREAD_CLEARANCE
+M8_PITCH = 1.25
+M8_MAJOR_R_NUT = 4.30
+M8_MINOR_R_NUT = 3.60
 
 SAMPLE_DESK_T = 13.0        # Positioned clamped onto a 1.3 cm (13 mm) desk!
 MJ_T = 14.0
 MJ_X_MIN = -30.5
 MJ_X_MAX = 17.0
 MJ_HALF_W = 26.0
-SWIVEL_R = 7.6              # Screw pin stays SWIVEL_R - 0.6 = 7.00 mm (backward compatible!)
-SWIVEL_POCKET_R = 7.35      # 0.35 mm radial slip fit on jaw socket (reduces wobble without guide rods)
+SWIVEL_POCKET_R = 4.40      # Ø8.80 mm x 6.0 mm pocket for M8 bolt tip (leaves 8.0 mm solid top deck!)
 
 
 def make_trap_thread_cutter(major_r, minor_r, pitch, height):
@@ -157,12 +153,16 @@ def build_clamp_body():
                 with Locations((bx, by + sy * 3.6, 10.75)):
                     Box(M4_NUT_AF, 14.5, M4_NUT_H, mode=Mode.SUBTRACT)
 
+        # M8 x 120 mm steel bolt clearance bore (Ø8.60 mm) + top captive M8 hex nut pocket (13.3 mm AF x 7.5 mm, rotation=30° for self-supporting horizontal print roof)
         with Locations((SCREW_X, 0, 0.5 * (LOWER_JAW_Z_BOT + LOWER_JAW_Z_TOP))):
-            Cylinder(radius=THREAD_MINOR_R_NUT, height=LOWER_JAW_T + 2.0, mode=Mode.SUBTRACT)
+            Cylinder(radius=M8_BORE_R, height=LOWER_JAW_T + 2.0, mode=Mode.SUBTRACT)
 
-    nut_cutter = make_trap_thread_cutter(THREAD_MAJOR_R_NUT, THREAD_MINOR_R_NUT, THREAD_PITCH, LOWER_JAW_T)
-    nut_cutter = Pos(SCREW_X, 0, LOWER_JAW_Z_BOT) * nut_cutter
-    return p.part - nut_cutter
+        with BuildSketch(Plane.XY.offset(LOWER_JAW_Z_TOP - M8_NUT_POCKET_D)) as sk_nut:
+            with Locations((SCREW_X, 0)):
+                RegularPolygon(radius=M8_HEX_R, side_count=6, rotation=30)
+        extrude(sk_nut.sketch, amount=M8_NUT_POCKET_D + 1.0, mode=Mode.SUBTRACT)
+
+    return p.part
 
 
 def build_monolithic_joint_pylon():
@@ -293,47 +293,80 @@ def build_moving_jaw(z_top=-SAMPLE_DESK_T):
             with Locations((gx, 0, z_top - 0.4)):
                 Box(2.0, MJ_HALF_W * 2 - 6.0, 1.0, mode=Mode.SUBTRACT)
         with Locations((SCREW_X, 0, z_bot + 2.5)):
-            Cylinder(radius=SWIVEL_POCKET_R, height=5.5, mode=Mode.SUBTRACT)
+            Cylinder(radius=SWIVEL_POCKET_R, height=6.5, mode=Mode.SUBTRACT)
     return p.part
 
 
-def build_clamp_screw(z_jaw_top=-SAMPLE_DESK_T):
-    z_tip = z_jaw_top - MJ_T + 4.5
-    z_knob_top = LOWER_JAW_Z_BOT - 13.0  # -97 mm -> z_thread_start=-96 mm (-12 mm = -4*3 mm exact pitch sync to -84 mm!)
-    knob_h = 15.0
+def build_m8_knob():
+    """Press-fit ergonomic Ø42 x 16 mm hand knob for an M8 (13 mm hex head) steel bolt."""
+    knob_h = 16.0
     knob_r = 21.0
-    shaft_len = z_tip - z_knob_top
-    swivel_neck = 5.0
+    hex_depth = 8.0
     with BuildPart() as p:
-        with Locations((SCREW_X, 0, z_tip - swivel_neck / 2.0)):
-            Cylinder(radius=SWIVEL_R - 0.6, height=swivel_neck)
-        thread_h = shaft_len - swivel_neck
-        with Locations((SCREW_X, 0, z_knob_top + thread_h / 2.0)):
-            Cylinder(radius=THREAD_MINOR_R_SCREW, height=thread_h)
-        with Locations((SCREW_X, 0, z_knob_top - knob_h / 2.0)):
+        with Locations((0, 0, knob_h / 2.0)):
             Cylinder(radius=knob_r, height=knob_h)
             for k in range(8):
                 ang = k * 45.0
                 with Locations((knob_r * math.cos(math.radians(ang)), knob_r * math.sin(math.radians(ang)), 0)):
                     Cylinder(radius=3.5, height=knob_h + 1.0, mode=Mode.SUBTRACT)
-    ext_h = thread_h - 1.5
-    ext_thread = make_trap_thread_cutter(THREAD_MAJOR_R_SCREW, THREAD_MINOR_R_SCREW, THREAD_PITCH, ext_h)
-    ext_thread = Pos(SCREW_X, 0, z_knob_top + 1.0) * ext_thread
-    return p.part + ext_thread
+        with BuildSketch(Plane.XY.offset(knob_h - hex_depth)) as sk_head:
+            RegularPolygon(radius=M8_HEX_R, side_count=6, rotation=30)
+        extrude(sk_head.sketch, amount=hex_depth + 1.0, mode=Mode.SUBTRACT)
+    return p.part
+
+
+def build_m8_backup_nut():
+    """Flanged backup M8x1.25 printed hex nut (13.0 mm AF x 12 mm) with <=37° chamfered flange matching Body's hex trap."""
+    hex_h = 7.8
+    cone_h = 2.0
+    flange_h = 2.2
+    total_h = hex_h + cone_h + flange_h  # 12.0 mm (~9.6 M8 threads)
+    nut_hex_r = 13.00 / math.sqrt(3.0)
+    with BuildPart() as p:
+        with BuildSketch(Plane.XY) as sk_hex:
+            RegularPolygon(radius=nut_hex_r, side_count=6, rotation=30)
+        extrude(sk_hex.sketch, amount=hex_h)
+        with Locations((0, 0, hex_h + cone_h / 2.0)):
+            Cone(bottom_radius=nut_hex_r, top_radius=9.0, height=cone_h)
+        with Locations((0, 0, hex_h + cone_h + flange_h / 2.0)):
+            Cylinder(radius=9.0, height=flange_h)
+        with Locations((0, 0, total_h / 2.0)):
+            Cylinder(radius=M8_MINOR_R_NUT, height=total_h + 1.0, mode=Mode.SUBTRACT)
+    thread_cutter = make_trap_thread_cutter(M8_MAJOR_R_NUT, M8_MINOR_R_NUT, M8_PITCH, total_h)
+    return p.part - thread_cutter
+
+
+def build_sample_m8_bolt(z_jaw_top=-SAMPLE_DESK_T):
+    """Reference M8 x 120 mm steel hex bolt + knob position when clamped on 13 mm desk."""
+    z_tip = z_jaw_top - MJ_T + 5.5  # seats cleanly inside Jaw Ø8.8 x 6 mm pocket
+    bolt_len = 120.0
+    head_h = 5.3
+    z_shaft_bot = z_tip - bolt_len
+    with BuildPart() as p:
+        with Locations((SCREW_X, 0, 0.5 * (z_shaft_bot + z_tip))):
+            Cylinder(radius=4.0, height=bolt_len)
+        with BuildSketch(Plane.XY.offset(z_shaft_bot - head_h)) as sk_h:
+            with Locations((SCREW_X, 0)):
+                RegularPolygon(radius=13.0 / math.sqrt(3.0), side_count=6, rotation=30)
+        extrude(sk_h.sketch, amount=head_h)
+    return p.part
 
 
 def main():
-    print("Generating V6 C-Clamp + Dedicated Monolithic Standing Base Joint Pylon...")
+    print("Generating V6 C-Clamp (M8 x 120 mm Bolt + Captive Nut Edition) + Standing Base Joint Pylon...")
     body = build_clamp_body()
     joint = build_monolithic_joint_pylon()
     jaw = build_moving_jaw()
-    screw = build_clamp_screw()
+    m8_knob = build_m8_knob()
+    m8_nut = build_m8_backup_nut()
+    m8_bolt_ref = build_sample_m8_bolt()
 
     files = {
         "arm_base_v6_body": body,
         "arm_base_v6_joint": joint,
         "arm_base_v6_jaw": jaw,
-        "arm_base_v6_screw": screw,
+        "arm_base_v6_m8_knob": m8_knob,
+        "arm_base_v6_m8_nut": m8_nut,
     }
     for name, part in files.items():
         export_step(part, os.path.join(OUT_DIR, f"{name}.step"))
@@ -341,7 +374,7 @@ def main():
         bb = part.bounding_box()
         print(f"  {name}: X=[{bb.min.X:.2f},{bb.max.X:.2f}], Y=[{bb.min.Y:.2f},{bb.max.Y:.2f}], Z=[{bb.min.Z:.2f},{bb.max.Z:.2f}]")
 
-    asm_compound = Compound(children=[body, joint, jaw, screw])
+    asm_compound = Compound(children=[body, joint, jaw, m8_bolt_ref])
     export_step(asm_compound, os.path.join(OUT_DIR, "arm_base_v6_complete.step"))
     print("Exported V6 STEPs & STLs.")
 
