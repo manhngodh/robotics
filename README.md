@@ -9,7 +9,7 @@ Parametric Python (`build123d`) CAD models, printable `.stl` / `.step` parts, ha
   - **3D Measurement Tool (`M`):** Measure 2-point distance (`d`, `ΔX/ΔY/ΔZ`), 3-point hole diameter (`Ø`), and bounding box (`XYZ`) directly in the browser.
 
 ## Key Printable Parts (Click on GitHub for Native 3D STL Preview)
-- [PrintReady_MG996R_to_MG996R.stl](PrintReady_MG996R_to_MG996R.stl) — Monolithic MG996R-to-MG996R link (`100.50 × 66.00 × 35.50 mm`, `72.00 mm` J1→J2, `56.50 mm` yoke gap, `623ZZ` `3×10×4` M3, `30.00 mm` pocket depth, shaft `+X`, through-height `-X` boot slot, `0.000 mm³` clash across `±105°`)
+- [PrintReady_MG996R_to_MG996R.stl](PrintReady_MG996R_to_MG996R.stl) — Monolithic MG996R-to-MG996R link (`100.50 × 66.00 × 36.50 mm`, `72.00 mm` J1→J2, `56.50 mm` yoke gap, `623ZZ` `3×10×4` M3 + `Ø5.5×1.0 mm` underside spigot, shaft `+X`, V6 `-Y/+X` wire bay + `#7b` lead-in groove, `0.000 mm³` clash across `±105°`)
 - [PrintReady_MG996R_to_MG90S_2Arm.stl](PrintReady_MG996R_to_MG90S_2Arm.stl) — Compact 2-Arm MG996R-to-MG90S cover (`78.50 × 66.00 × 26.00 mm`, `57.50 mm` link length, `56.50 mm` yoke gap, `623ZZ` M3, `≤45°` bottom bevel, `0.000 mm³` clash across `±105°`)
 - [PrintReady_V6_Joint.stl](PrintReady_V6_Joint.stl) — V6 Base-to-MG996R Joint Pylon (`30.00 mm` pocket depth, `+X` M3 `Ø2.60 mm` spigot)
 - [PrintReady_V6_Body.stl](PrintReady_V6_Body.stl) — V6 Desk Clamp Body (`M8` captive hex nut trap `13.3 mm AF` + `Ø8.6 mm` bore)

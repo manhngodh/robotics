@@ -118,6 +118,10 @@ def build_arm_link():
             make_face()
         extrude(sk_nose.sketch, amount=HOUSING_TOP_Z)
 
+        # 6. Coaxial underside 623ZZ inner-race spacer boss (Ø5.5 mm x 1.0 mm below Z=0, matching Joint Base V6!)
+        with Locations((J2_SHAFT_X, J2_SHAFT_Y, -0.25)):
+            Cylinder(radius=2.75, height=1.5)
+
     part = arm_minus + arm_plus + body.part
 
     # --- SUBTRACTIONS ---
@@ -180,9 +184,9 @@ def build_arm_link():
             make_face()
         extrude(sk_wire_lead.sketch, amount=(groove_z_max - groove_z_min))
 
-        # F. Coaxial M3 pilot bore in Z=0..5.5 bottom bearing bridge at (66.0, 8.75) for 623ZZ (3x10x4)
-        with Locations((J2_SHAFT_X, J2_SHAFT_Y, 2.4)):
-            Cylinder(radius=1.30, height=5.0)
+        # F. Coaxial M3 pilot bore in Z=-1.0..5.5 bottom bearing bridge + spigot at (66.0, 8.75) for 623ZZ (3x10x4)
+        with Locations((J2_SHAFT_X, J2_SHAFT_Y, 1.9)):
+            Cylinder(radius=1.30, height=6.2)
 
     part = part - cuts.part
 
