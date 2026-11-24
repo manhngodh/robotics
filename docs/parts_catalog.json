@@ -9,8 +9,8 @@
       66.0,
       35.5
     ],
-    "volume_mm3": 60810.8,
-    "note": "PLA/PETG · Khe càng 56.50mm · Trục +X · Cửa dây + rảnh dẫn dây #7b kiểu Joint Base V6 · 25T Đĩa nhựa (Ø2.20mm)"
+    "volume_mm3": 60887.7,
+    "note": "PLA/PETG · Khe càng 56.50mm · Trục +X · Cửa dây + rảnh dẫn dây #7b kiểu Joint Base V6 · 25T Đĩa nhựa (4× Ø2.20mm phẳng)"
   },
   {
     "id": "cover_mg90s_2arm",
@@ -22,8 +22,8 @@
       66.0,
       26.0
     ],
-    "volume_mm3": 24125.8,
-    "note": "PLA/PETG · Khe càng 56.50mm · Dài 57.50mm · Ổ bi 623ZZ M3 · 25T Đĩa nhựa (Ø2.20mm)"
+    "volume_mm3": 24202.7,
+    "note": "PLA/PETG · Khe càng 56.50mm · Dài 57.50mm · Ổ bi 623ZZ M3 · 25T Đĩa nhựa (4× Ø2.20mm phẳng)"
   },
   {
     "id": "joint_base",

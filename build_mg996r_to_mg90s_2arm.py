@@ -136,7 +136,7 @@ def build_mg996r_to_mg90s_2arm():
 
     # --- Cut Bolt & Bearing Interfaces ---
     with BuildPart() as cuts:
-        # 1. -Y 25T round plastic horn pattern (Ø6.2 center + 4x Ø2.20 mm on Ø14.0 PCD + Ø4.6x1.5 outer seat)
+        # 1. -Y 25T round plastic horn pattern (Ø6.2 center + 4x Ø2.20 mm straight-through bores on Ø14.0 PCD)
         arm_ymid = 0.5 * (MINUS_Y_OUT + MINUS_Y_IN)
         with Locations((PIVOT_X, arm_ymid, PIVOT_Z)):
             Cylinder(radius=3.1, height=7.0, rotation=(90, 0, 0))
@@ -146,8 +146,6 @@ def build_mg996r_to_mg90s_2arm():
             hz = PIVOT_Z + 7.0 * math.sin(ang)
             with Locations((hx, arm_ymid, hz)):
                 Cylinder(radius=1.10, height=7.0, rotation=(90, 0, 0))
-            with Locations((hx, MINUS_Y_OUT + 0.5, hz)):
-                Cylinder(radius=2.30, height=2.0, rotation=(90, 0, 0))
 
         # 2. +Y 623ZZ (3x10x4 M3) bearing pocket (Y=38.0..42.0 -> Ø10.25) & inner lip (Y=37.0..38.0 -> Ø7.0)
         with Locations((PIVOT_X, 0.5 * (PLUS_Y_IN + PLUS_Y_OUT), PIVOT_Z)):
